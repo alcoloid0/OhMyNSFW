@@ -17,25 +17,15 @@
 
 package com.github.alcoloid0.nsfwplugin.provider
 
-import com.github.alcoloid0.nsfwplugin.provider.impl.NekoBotImageProvider
-import com.github.alcoloid0.nsfwplugin.provider.impl.Rule34ImageProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.awt.image.BufferedImage
 import java.net.URI
 import javax.imageio.ImageIO
 
 interface ImageProvider {
     suspend fun getRandomUri(vararg extra: String): URI
 
-    suspend fun getRandomImage(vararg extra: String): BufferedImage {
-        return withContext(Dispatchers.IO) {
-            ImageIO.read(getRandomUri(*extra).toURL())!!
-        }
-    }
-
-    companion object {
-        val NekoBot: ImageProvider = NekoBotImageProvider()
-        val Rule34: ImageProvider = Rule34ImageProvider()
+    suspend fun getRandomImage(vararg extra: String) = withContext(Dispatchers.IO) {
+        ImageIO.read(getRandomUri(*extra).toURL())!!
     }
 }
