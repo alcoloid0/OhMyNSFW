@@ -1,0 +1,22 @@
+# Made with ❤️ by alcoloid (GitHub: https://github.com/alcoloid0)
+
+message-prefix: '<#cb00f5>[OH MY NSFW] '
+
+map-item-settings:
+  name: '<#cb00f5>NSFW'
+  lore:
+    - ''
+    - '<rainbow>Just a heads up, don''t show this to mom'
+    - ''
+  glow-effect: true
+
+message: # https://docs.advntr.dev/minimessage/format.html
+  settings-reloaded: '<green>Plugin settings reloaded.'
+  request-prepare: 'Hold on! We''re loading the NSFW content up on the server right now.'
+  request-error-occurred: '<red>Oh no! There were some technical issues while loading NSFW content.'
+  request-complete: '<green>You''ve been given a map with a bit of adult content... Yummy!'
+  must-be-player: '<red>You must be a player to use this command!'
+  invalid-enum: '<red>Invalid <parameter>: <input>.'
+  missing-argument: '<red>You must provide a value for the <argument>!'
+  no-permission: '<red>You do not have permission to execute this command.'
+  no-subcommand-specified: '<red>You must specify a subcommand!'

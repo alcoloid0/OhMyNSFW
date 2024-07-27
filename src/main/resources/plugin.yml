@@ -1,0 +1,5 @@
+name: OhMyNSFW
+main: com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
+version: '${version}'
+api-version: 1.20
+authors: [ alcoloid ]
