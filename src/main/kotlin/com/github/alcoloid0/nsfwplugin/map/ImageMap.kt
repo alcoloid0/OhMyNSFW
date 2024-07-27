@@ -42,14 +42,14 @@ object ImageMap {
         val settings: Settings by OhMyNsfwPlugin.Companion::settings
 
         if (settings.value<Boolean>("map-item-settings.glow-effect") == true) {
-            itemStack.addUnsafeEnchantment(Enchantment.FORTUNE, 1)
+            itemStack.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 1)
         }
 
         val itemMeta = (itemStack.itemMeta as MapMeta).apply {
-            addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ADDITIONAL_TOOLTIP)
+            addItemFlags(ItemFlag.HIDE_ENCHANTS)
 
             lore(settings.componentList("map-item-settings.lore"))
-            itemName(settings.component("map-item-settings.name"))
+            displayName(settings.component("map-item-settings.name"))
 
             mapView = Bukkit.createMap(Bukkit.getWorlds().first()).apply {
                 renderers.clear()

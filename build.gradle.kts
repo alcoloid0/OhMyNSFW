@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC")
     implementation("com.github.Revxrsal.Lamp:common:3.2.1")
     implementation("com.github.Revxrsal.Lamp:bukkit:3.2.1")
@@ -33,7 +33,7 @@ license {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(17)
 }
 
 tasks.withType<JavaCompile> { options.compilerArgs.add("-parameters") }
