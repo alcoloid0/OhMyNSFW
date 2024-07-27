@@ -29,7 +29,9 @@ enum class NekoBotImageType {
 
     class LampSuggestionProvider : SuggestionProvider {
         override fun getSuggestions(
-            args: MutableList<String>, sender: CommandActor, command: ExecutableCommand
-        ) = entries.map { "$it".lowercase() }
+            args: MutableList<String>,
+            sender: CommandActor,
+            command: ExecutableCommand
+        ): List<String> = entries.map { "$it".lowercase() }
     }
 }
