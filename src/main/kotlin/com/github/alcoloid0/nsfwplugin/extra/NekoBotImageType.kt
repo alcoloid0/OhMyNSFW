@@ -21,6 +21,7 @@ import revxrsal.commands.autocomplete.SuggestionProvider
 import revxrsal.commands.command.CommandActor
 import revxrsal.commands.command.ExecutableCommand
 
+@Suppress("unused")
 enum class NekoBotImageType {
     HAss, HMidriff, `4K`, Hentai, Holo, HNeko, Neko, HKitsune, Kemonomimi, Anal,
     HAnal, GoneWild, Kanna, Ass, Pussy, Thigh, HThigh, Coffee, Food, Paizuri,
