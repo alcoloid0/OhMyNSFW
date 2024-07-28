@@ -18,33 +18,32 @@
 package com.github.alcoloid0.nsfwplugin.provider.impl
 
 import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
-import com.github.alcoloid0.nsfwplugin.provider.dto.RedditCommonDto
-import com.github.alcoloid0.nsfwplugin.provider.dto.RedditEntryDto
-import com.github.alcoloid0.nsfwplugin.provider.dto.RedditPostDto
+import com.github.alcoloid0.nsfwplugin.provider.dto.RedditListingDto
+import com.github.alcoloid0.nsfwplugin.provider.dto.RedditThingDto
+import com.github.alcoloid0.nsfwplugin.provider.dto.RedditLinkDto
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.URI
 
-typealias EntryCommonPostDto = RedditEntryDto<RedditCommonDto<RedditPostDto>>
+private typealias ThingListingLinkDto = RedditThingDto<RedditListingDto<RedditLinkDto>>
 
-class RedditImageProvider(private val subreddit: String) : ImageProvider {
+class RedditImageProvider(subreddit: String) : ImageProvider {
     private val jsonUri = URI("https://www.reddit.com/r/$subreddit.json?sort=top&t=daily")
 
     override suspend fun getRandomUri(vararg extra: String) = withContext(Dispatchers.IO) {
-        val entry = jsonUri.toURL().openStream().reader()
+        val mainThing = jsonUri.toURL().openStream().reader()
             .use { reader -> Gson().fromJson(reader.readText(), TYPE_TOKEN) }
 
-        val posts = entry.data.children
-            .map { it.data }
-            .filter { post -> post.url.substringAfterLast('.') in FILE_EXTENSIONS }
+        val links = mainThing.data.children.map { thing -> thing.data }
+            .filter { link -> link.url.substringAfterLast('.') in FILE_EXTENSIONS }
 
-        URI(posts.random().url)
+        URI(links.random().url)
     }
 
     companion object {
         private val FILE_EXTENSIONS = setOf("jpg", "png", "jpeg")
-        private val TYPE_TOKEN = (object : TypeToken<EntryCommonPostDto>() {})
+        private val TYPE_TOKEN = (object : TypeToken<ThingListingLinkDto>() {})
     }
 }

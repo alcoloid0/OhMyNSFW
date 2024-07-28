@@ -17,17 +17,13 @@
 
 package com.github.alcoloid0.nsfwplugin.provider.dto
 
-import com.google.gson.annotations.SerializedName
+data class RedditThingDto<T>(val kind: String, val data: T)
 
-data class RedditEntryDto<T>(val kind: String, val data: T)
-
-data class RedditCommonDto<T>(
+data class RedditListingDto<T>(
+    val before: String,
     val after: String,
-    val dist: Int,
     val modhash: String,
-    @SerializedName("geo_filter") val geoFilter: String,
-    val children: List<RedditEntryDto<T>>,
-    val before: String
+    val children: List<RedditThingDto<T>>
 )
 
-data class RedditPostDto(val url: String, /* skip... */)
+data class RedditLinkDto(val url: String, /* skip... */)
