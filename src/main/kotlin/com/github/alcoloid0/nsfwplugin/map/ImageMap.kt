@@ -46,7 +46,7 @@ object ImageMap {
         }
 
         val itemMeta = (itemStack.itemMeta as MapMeta).apply {
-            addItemFlags(ItemFlag.HIDE_ENCHANTS)
+            addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ITEM_SPECIFICS)
 
             lore(settings.componentList("map-item-settings.lore"))
             displayName(settings.component("map-item-settings.name"))
