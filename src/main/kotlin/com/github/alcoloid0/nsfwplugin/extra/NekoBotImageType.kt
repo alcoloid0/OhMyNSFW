@@ -17,21 +17,9 @@
 
 package com.github.alcoloid0.nsfwplugin.extra
 
-import revxrsal.commands.autocomplete.SuggestionProvider
-import revxrsal.commands.command.CommandActor
-import revxrsal.commands.command.ExecutableCommand
-
 @Suppress("unused")
 enum class NekoBotImageType {
     HAss, HMidriff, `4K`, Hentai, Holo, HNeko, Neko, HKitsune, Kemonomimi, Anal,
     HAnal, GoneWild, Kanna, Ass, Pussy, Thigh, HThigh, Coffee, Food, Paizuri,
     Tentacle, Boobs, HBoobs, Yaoi;
-
-    class LampSuggestionProvider : SuggestionProvider {
-        override fun getSuggestions(
-            args: MutableList<String>,
-            sender: CommandActor,
-            command: ExecutableCommand
-        ): List<String> = entries.map { "$it".lowercase() }
-    }
 }
