@@ -44,6 +44,6 @@ class Rule34ImageProvider : ImageProvider {
     companion object {
         private const val BASE_URL = "https://api.rule34.xxx/index.php"
         private val FILE_EXTENSIONS = setOf("jpg", "png", "jpeg")
-        private val TYPE_TOKEN = (object : TypeToken<List<Rule34PostEntryDto>>() {})
+        private val TYPE_TOKEN = object : TypeToken<List<Rule34PostEntryDto>>() {}
     }
 }

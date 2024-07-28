@@ -44,6 +44,6 @@ class RedditImageProvider(subreddit: String) : ImageProvider {
 
     companion object {
         private val FILE_EXTENSIONS = setOf("jpg", "png", "jpeg")
-        private val TYPE_TOKEN = (object : TypeToken<ThingListingLinkDto>() {})
+        private val TYPE_TOKEN = object : TypeToken<ThingListingLinkDto>() {}
     }
 }
