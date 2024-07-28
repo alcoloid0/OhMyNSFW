@@ -18,6 +18,8 @@
 package com.github.alcoloid0.nsfwplugin
 
 import com.github.alcoloid0.nsfwplugin.command.OhMyNsfwCommand
+import com.github.alcoloid0.nsfwplugin.command.locale.SettingsLocaleReader
+import com.github.alcoloid0.nsfwplugin.command.suggestion.NekoBotImageTypeSP
 import com.github.alcoloid0.nsfwplugin.extra.NekoBotImageType
 import com.github.alcoloid0.nsfwplugin.extra.Settings
 import com.github.alcoloid0.nsfwplugin.listener.MapInitializeListener
@@ -37,9 +39,9 @@ class OhMyNsfwPlugin : JavaPlugin() {
 
         commandHandler = BukkitCommandHandler.create(this)
         commandHandler.autoCompleter.parameterSuggestions<NekoBotImageType>(
-            NekoBotImageType.LampSuggestionProvider()
+            NekoBotImageTypeSP()
         )
-        commandHandler.translator.add(Settings.LampLocaleReader(settings))
+        commandHandler.translator.add(SettingsLocaleReader(settings))
         commandHandler.register(OhMyNsfwCommand())
         commandHandler.registerBrigadier()
 
