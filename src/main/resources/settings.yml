@@ -11,10 +11,10 @@ map-item-settings:
   glow-effect: true
 
 message: # https://docs.advntr.dev/minimessage/format.html
-  settings-reloaded: '<green>Plugin settings reloaded.'
-  request-prepare: 'Hold on! We''re loading the NSFW content up on the server right now.'
+  settings-reloaded: '<yellow>Plugin settings reloaded.'
+  request-prepare: '<white>Hold on! We''re loading the NSFW content up on the server right now.'
   request-error-occurred: '<red>Oh no! There were some technical issues while loading NSFW content.'
-  request-complete: '<green>You''ve been given a map with a bit of adult content... Yummy!'
+  request-complete: '<white>You''ve been given a map <u>with a bit of adult content...</u> Yummy!'
   must-be-player: '<red>You must be a player to use this command!'
   invalid-enum: '<red>Invalid <parameter>: <input>.'
   missing-argument: '<red>You must provide a value for the <argument>!'
