@@ -17,8 +17,6 @@
 
 package com.github.alcoloid0.nsfwplugin.extra
 
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
@@ -27,22 +25,25 @@ import revxrsal.commands.locales.Locales
 import java.util.*
 
 class SettingsLocaleReader(private val settings: Settings) : LocaleReader {
-    override fun containsKey(key: String?)
-            = settings.yamlConfiguration.contains("message.$key")
+    override fun containsKey(key: String?): Boolean {
+        return key?.let { settings.yamlConfiguration.contains("message.$it") } ?: false
+    }
 
     override fun get(key: String?): String {
-        val component = Component.empty().color(NamedTextColor.WHITE)
-        component.append(settings.message(key!!, ARGUMENT_TAG_RESOLVER))
-        return LegacyComponentSerializer.legacySection().serialize(component)
+        requireNotNull(key) { "Key cannot be null" }
+
+        return COMPONENT_SERIALIZER.serialize(settings.message(key, ARGUMENT_TAG_RESOLVER))
     }
 
     override fun getLocale(): Locale = Locales.ENGLISH
 
     companion object {
-        private val ARGUMENT_TAG_RESOLVER = TagResolver.builder()
-            .resolver(Placeholder.parsed("parameter", "{0}"))
-            .resolver(Placeholder.parsed("argument", "{0}"))
-            .resolver(Placeholder.parsed("input", "{1}"))
-            .build()
+        private val COMPONENT_SERIALIZER = LegacyComponentSerializer.legacySection()
+
+        private val ARGUMENT_TAG_RESOLVER = TagResolver.resolver(
+            Placeholder.parsed("parameter", "{0}"),
+            Placeholder.parsed("argument", "{0}"),
+            Placeholder.parsed("input", "{1}")
+        )
     }
 }

@@ -27,6 +27,7 @@ import java.nio.file.Path
 
 class Settings(private val plugin: Plugin) {
     private val yamlFilePath: Path = plugin.dataFolder.toPath().resolve(FILE_NAME)
+
     lateinit var yamlConfiguration: YamlConfiguration private set
 
     init {
@@ -37,17 +38,14 @@ class Settings(private val plugin: Plugin) {
 
     fun component(path: String, vararg tags: TagResolver): Component? {
         return value<String>(path)?.let {
-            miniMessage.deserialize(it, TagResolver.resolver(*tags))
+            MINI_MESSAGE.deserialize(it, TagResolver.resolver(*tags))
         }
     }
 
     fun componentList(path: String, vararg tags: TagResolver): List<Component> {
-        val list = value<List<String>>(path)
-
-        return when {
-            list == null -> emptyList()
-            else -> list.map { miniMessage.deserialize(it, TagResolver.resolver(*tags)) }
-        }
+        return value<List<String>>(path)?.map {
+            MINI_MESSAGE.deserialize(it, TagResolver.resolver(*tags))
+        } ?: emptyList()
     }
 
     fun message(key: String, vararg tags: TagResolver): Component {
@@ -66,6 +64,6 @@ class Settings(private val plugin: Plugin) {
 
     companion object {
         private const val FILE_NAME = "settings.yml"
-        private val miniMessage = MiniMessage.miniMessage()
+        private val MINI_MESSAGE = MiniMessage.miniMessage()
     }
 }
