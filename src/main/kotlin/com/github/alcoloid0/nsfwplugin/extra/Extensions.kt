@@ -18,6 +18,7 @@
 package com.github.alcoloid0.nsfwplugin.extra
 
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
+import com.github.alcoloid0.nsfwplugin.settings.Settings
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 

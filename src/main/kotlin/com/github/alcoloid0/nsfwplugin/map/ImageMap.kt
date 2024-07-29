@@ -18,7 +18,7 @@
 package com.github.alcoloid0.nsfwplugin.map
 
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
-import com.github.alcoloid0.nsfwplugin.extra.Settings
+import com.github.alcoloid0.nsfwplugin.settings.Settings
 import com.github.alcoloid0.nsfwplugin.extra.sendSettingsMessage
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.DelicateCoroutinesApi

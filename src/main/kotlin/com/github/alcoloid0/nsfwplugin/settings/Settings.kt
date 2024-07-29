@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.extra
+package com.github.alcoloid0.nsfwplugin.settings
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
