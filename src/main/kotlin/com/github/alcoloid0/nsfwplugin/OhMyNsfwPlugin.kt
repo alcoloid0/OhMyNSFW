@@ -19,14 +19,11 @@ package com.github.alcoloid0.nsfwplugin
 
 import com.github.alcoloid0.nsfwplugin.command.OhMyNsfwCommand
 import com.github.alcoloid0.nsfwplugin.command.locale.SettingsLocaleReader
-import com.github.alcoloid0.nsfwplugin.command.suggestion.NekoBotImageTypeSP
-import com.github.alcoloid0.nsfwplugin.extra.NekoBotImageType
 import com.github.alcoloid0.nsfwplugin.extra.Settings
 import com.github.alcoloid0.nsfwplugin.listener.MapInitializeListener
 import com.github.alcoloid0.nsfwplugin.map.ImageMapCacheService
 import org.bukkit.plugin.java.JavaPlugin
 import revxrsal.commands.bukkit.BukkitCommandHandler
-import revxrsal.commands.ktx.parameterSuggestions
 import kotlin.io.path.Path
 import kotlin.time.measureTime
 
@@ -38,9 +35,6 @@ class OhMyNsfwPlugin : JavaPlugin() {
         cacheService = ImageMapCacheService(Path(dataFolder.path, "cache"))
 
         commandHandler = BukkitCommandHandler.create(this)
-        commandHandler.autoCompleter.parameterSuggestions<NekoBotImageType>(
-            NekoBotImageTypeSP()
-        )
         commandHandler.translator.add(SettingsLocaleReader(settings))
         commandHandler.register(OhMyNsfwCommand())
         commandHandler.registerBrigadier()
