@@ -18,7 +18,7 @@
 package com.github.alcoloid0.nsfwplugin
 
 import com.github.alcoloid0.nsfwplugin.command.OhMyNsfwCommand
-import com.github.alcoloid0.nsfwplugin.command.locale.SettingsLocaleReader
+import com.github.alcoloid0.nsfwplugin.extra.SettingsLocaleReader
 import com.github.alcoloid0.nsfwplugin.extra.Settings
 import com.github.alcoloid0.nsfwplugin.listener.MapInitializeListener
 import com.github.alcoloid0.nsfwplugin.map.ImageMapCacheService
