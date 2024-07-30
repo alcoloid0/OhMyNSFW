@@ -19,7 +19,7 @@ package com.github.alcoloid0.nsfwplugin.extra
 
 @Suppress("unused")
 enum class NekoBotImageType {
-    HAss, HMidriff, `4K`, Hentai, Holo, HNeko, Neko, HKitsune, Kemonomimi, Anal,
-    HAnal, GoneWild, Kanna, Ass, Pussy, Thigh, HThigh, Coffee, Food, Paizuri,
-    Tentacle, Boobs, HBoobs, Yaoi;
+    HAss, HMidriff, `4K`, Hentai, Holo, HNeko, Neko, HKitsune, Kemonomimi,
+    Anal, HAnal, GoneWild, Kanna, Ass, Pussy, Thigh, HThigh, Coffee, Food,
+    Paizuri, Tentacle, Boobs, HBoobs, Yaoi;
 }
