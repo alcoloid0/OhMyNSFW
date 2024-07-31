@@ -33,7 +33,7 @@ class RedditImageProvider(subreddit: String) : ImageProvider {
     private val jsonUri = URI("https://www.reddit.com/r/$subreddit.json?sort=top&t=daily")
 
     override suspend fun getRandomUri(vararg extra: String) = withContext(Dispatchers.IO) {
-        val mainThing = jsonUri.toURL().openStream().reader()
+        val mainThing: ThingListingLinkDto = jsonUri.toURL().openStream().reader()
             .use { reader -> Gson().fromJson(reader.readText(), TYPE_TOKEN) }
 
         val links = mainThing.data.children.map { thing -> thing.data }
@@ -44,6 +44,6 @@ class RedditImageProvider(subreddit: String) : ImageProvider {
 
     companion object {
         private val FILE_EXTENSIONS = setOf("jpg", "png", "jpeg")
-        private val TYPE_TOKEN = object : TypeToken<ThingListingLinkDto>() {}
+        private val TYPE_TOKEN = object : TypeToken<ThingListingLinkDto>() {}.type
     }
 }

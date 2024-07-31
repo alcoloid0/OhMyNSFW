@@ -17,24 +17,20 @@
 
 package com.github.alcoloid0.nsfwplugin.extra
 
-import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.command.CommandSender
-import org.bukkit.inventory.meta.ItemMeta
+import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import org.bukkit.Material
 
-fun CommandSender.sendSettingsMessage(key: String, vararg tags: TagResolver) {
-    val component = OhMyNsfwPlugin.settings.message(key, *tags)
-
-    // HACK: Adventure BukkitAudiences is broken in Paper 1.21 (?)
+object AdventureSerializer {
+    // HACK: Adventure BukkitComponentSerializer is broken in Paper 1.21 (?)
     //  -- net.kyori:adventure-platform-bukkit:4.3.3
-    sendMessage(AdventureSerializer.LEGACY.serialize(component))
-}
+    val LEGACY = if (Material.entries.any { it.name == "NETHERITE_PICKAXE" }) {
+        LegacyComponentSerializer.builder().hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
+            .build()
+    } else {
+        LegacyComponentSerializer.builder().character('§').build()
+    }
 
-fun ItemMeta.displayName(component: Component?) {
-    setDisplayName(component?.let(AdventureSerializer.LEGACY::serialize))
-}
-
-fun ItemMeta.lore(components: List<Component>?) {
-    lore = components?.map(AdventureSerializer.LEGACY::serialize)
+    val MINI_MESSAGE = MiniMessage.miniMessage()
 }

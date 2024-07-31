@@ -12,15 +12,17 @@ version = "1.0"
 
 repositories {
     mavenCentral()
-    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://jitpack.io")
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC")
     implementation("com.github.Revxrsal.Lamp:common:3.2.1")
     implementation("com.github.Revxrsal.Lamp:bukkit:3.2.1")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.3")
+    implementation("net.kyori:adventure-text-minimessage:4.17.0")
 }
 
 license {
@@ -33,7 +35,7 @@ license {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(8)
 }
 
 tasks.withType<JavaCompile> { options.compilerArgs.add("-parameters") }
@@ -44,6 +46,10 @@ tasks.shadowJar { archiveClassifier.set("") }
 
 tasks.processResources {
     filesMatching("**/plugin.yml") { expand(project.properties) }
+}
+
+tasks.shadowJar {
+    relocate("net.kyori.adventure", "com.github.alcoloid0.shaded.kyori.adventure")
 }
 
 tasks.withType<KotlinJvmCompile> {

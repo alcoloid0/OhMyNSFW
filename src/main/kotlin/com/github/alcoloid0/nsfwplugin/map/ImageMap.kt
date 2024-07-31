@@ -18,7 +18,8 @@
 package com.github.alcoloid0.nsfwplugin.map
 
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
-import com.github.alcoloid0.nsfwplugin.settings.Settings
+import com.github.alcoloid0.nsfwplugin.extra.displayName
+import com.github.alcoloid0.nsfwplugin.extra.lore
 import com.github.alcoloid0.nsfwplugin.extra.sendSettingsMessage
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -39,17 +40,21 @@ object ImageMap {
     fun createItemStack(image: BufferedImage): ItemStack {
         val itemStack = ItemStack(Material.FILLED_MAP)
 
-        val settings: Settings by OhMyNsfwPlugin.Companion::settings
-
-        if (settings.value<Boolean>("map-item-settings.glow-effect") == true) {
+        if (OhMyNsfwPlugin.settings.value<Boolean>("map-item-settings.glow-effect") == true) {
             itemStack.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 1)
         }
 
         val itemMeta = (itemStack.itemMeta as MapMeta).apply {
-            addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ITEM_SPECIFICS)
+            val hideItemSpecifics = try {
+                ItemFlag.valueOf("HIDE_ITEM_SPECIFICS") // Spigot 1.20.4+
+            } catch (_: Exception) {
+                ItemFlag.valueOf("HIDE_POTION_EFFECTS")
+            }
 
-            lore(settings.componentList("map-item-settings.lore"))
-            displayName(settings.component("map-item-settings.name"))
+            addItemFlags(ItemFlag.HIDE_ENCHANTS, hideItemSpecifics)
+
+            lore(OhMyNsfwPlugin.settings.componentList("map-item-settings.lore"))
+            displayName(OhMyNsfwPlugin.settings.component("map-item-settings.name"))
 
             mapView = Bukkit.createMap(Bukkit.getWorlds().first()).apply {
                 renderers.clear()
@@ -71,10 +76,14 @@ object ImageMap {
 
         GlobalScope.launch(handler) {
             launch {
-                val itemStack = createItemStack(lazyImage())
-                offlinePlayer.player?.inventory?.addItem(itemStack)
-                offlinePlayer.player?.sendSettingsMessage("request-complete")
-                cacheService.cacheItemStack(itemStack)
+                val image = lazyImage()
+
+                OhMyNsfwPlugin.runBukkitTask {
+                    val itemStack = createItemStack(image)
+                    offlinePlayer.player?.inventory?.addItem(itemStack)
+                    offlinePlayer.player?.sendSettingsMessage("request-complete")
+                    cacheService.cacheItemStack(itemStack)
+                }
             }
 
             offlinePlayer.player?.sendSettingsMessage("request-prepare")

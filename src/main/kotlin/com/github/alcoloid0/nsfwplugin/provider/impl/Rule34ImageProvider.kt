@@ -30,12 +30,12 @@ import java.nio.charset.StandardCharsets
 class Rule34ImageProvider : ImageProvider {
     override suspend fun getRandomUri(vararg extra: String) = withContext(Dispatchers.IO) {
         val tags = extra.joinToString(" ")
-            .let { URLEncoder.encode(it, StandardCharsets.UTF_8) }
+            .let { URLEncoder.encode(it, StandardCharsets.UTF_8.name()) }
 
         val url = URI("$BASE_URL?page=dapi&s=post&q=index&json=1&tags=$tags").toURL()
 
         val entries = url.openStream().reader()
-            .use { reader -> Gson().fromJson(reader, TYPE_TOKEN) }
+            .use { reader -> Gson().fromJson(reader, TYPE_TOKEN) as List<Rule34PostEntryDto> }
             .filter { entry -> entry.image.substringAfterLast('.') in FILE_EXTENSIONS }
 
         URI(entries.random().fileUrl)
@@ -44,6 +44,6 @@ class Rule34ImageProvider : ImageProvider {
     companion object {
         private const val BASE_URL = "https://api.rule34.xxx/index.php"
         private val FILE_EXTENSIONS = setOf("jpg", "png", "jpeg")
-        private val TYPE_TOKEN = object : TypeToken<List<Rule34PostEntryDto>>() {}
+        private val TYPE_TOKEN = object : TypeToken<List<Rule34PostEntryDto>>() {}.type
     }
 }

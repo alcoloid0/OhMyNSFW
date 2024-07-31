@@ -17,9 +17,9 @@
 
 package com.github.alcoloid0.nsfwplugin.settings
 
+import com.github.alcoloid0.nsfwplugin.extra.AdventureSerializer
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import revxrsal.commands.locales.LocaleReader
 import revxrsal.commands.locales.Locales
 import java.util.*
@@ -30,16 +30,16 @@ class SettingsLocaleReader(private val settings: Settings) : LocaleReader {
     }
 
     override fun get(key: String?): String {
-        requireNotNull(key) { "Key cannot be null" }
+        val component = settings.message(key!!, ARGUMENT_TAG_RESOLVER)
 
-        return COMPONENT_SERIALIZER.serialize(settings.message(key, ARGUMENT_TAG_RESOLVER))
+        return AdventureSerializer.LEGACY.serialize(component)
     }
 
     override fun getLocale(): Locale = Locales.ENGLISH
 
     companion object {
-        private val COMPONENT_SERIALIZER = LegacyComponentSerializer.legacySection()
-
+        // HACK: Lamp does not support formatting in MiniMessage tags and instead
+        //       uses {0}, {1}, etc.
         private val ARGUMENT_TAG_RESOLVER = TagResolver.resolver(
             Placeholder.parsed("parameter", "{0}"),
             Placeholder.parsed("argument", "{0}"),
