@@ -19,7 +19,7 @@ package com.github.alcoloid0.nsfwplugin.provider.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class Rule34PostEntryDto(
+data class GelbooruPostDto(
     @SerializedName("preview_url") val previewUrl: String,
     @SerializedName("sample_url") val sampleUrl: String,
     @SerializedName("file_url") val fileUrl: String,

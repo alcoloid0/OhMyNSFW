@@ -18,32 +18,33 @@
 package com.github.alcoloid0.nsfwplugin.provider.impl
 
 import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
-import com.github.alcoloid0.nsfwplugin.provider.dto.GelbooruPostDto
+import com.github.alcoloid0.nsfwplugin.provider.dto.GelbooruPostListDto
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.bukkit.Bukkit
 import java.net.URI
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-class Rule34ImageProvider : ImageProvider {
+class GelbooruImageProvider : ImageProvider {
     override suspend fun getRandomUri(vararg extra: String) = withContext(Dispatchers.IO) {
         val tags = extra.joinToString(" ")
             .let { URLEncoder.encode(it, StandardCharsets.UTF_8.name()) }
 
         val url = URI("$BASE_URL?page=dapi&s=post&q=index&json=1&tags=$tags").toURL()
 
-        val entries = url.openStream().reader()
-            .use { reader -> Gson().fromJson(reader, TYPE_TOKEN) as List<GelbooruPostDto> }
+        val postList = url.openStream().reader()
+            .use { reader -> Gson().fromJson(reader, GelbooruPostListDto::class.java) }
+
+        val posts = postList.post
             .filter { entry -> entry.image.substringAfterLast('.') in FILE_EXTENSIONS }
 
-        URI(entries.random().fileUrl)
+        URI(posts.random().fileUrl)
     }
 
     companion object {
-        private const val BASE_URL = "https://api.rule34.xxx/index.php"
+        private const val BASE_URL = "https://gelbooru.com/index.php"
         private val FILE_EXTENSIONS = setOf("jpg", "png", "jpeg")
-        private val TYPE_TOKEN = object : TypeToken<List<GelbooruPostDto>>() {}.type
     }
 }

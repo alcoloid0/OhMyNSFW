@@ -22,6 +22,7 @@ import com.github.alcoloid0.nsfwplugin.extra.NekoBotImageType
 import com.github.alcoloid0.nsfwplugin.extra.NsfwSubreddit
 import com.github.alcoloid0.nsfwplugin.extra.sendSettingsMessage
 import com.github.alcoloid0.nsfwplugin.map.ImageMap
+import com.github.alcoloid0.nsfwplugin.provider.impl.GelbooruImageProvider
 import com.github.alcoloid0.nsfwplugin.provider.impl.NekoBotImageProvider
 import com.github.alcoloid0.nsfwplugin.provider.impl.RedditImageProvider
 import com.github.alcoloid0.nsfwplugin.provider.impl.Rule34ImageProvider
@@ -55,6 +56,14 @@ class OhMyNsfwCommand {
     fun onReddit(player: Player, subreddit: NsfwSubreddit) {
         ImageMap.request(player) {
             RedditImageProvider(subreddit.name).getRandomImage()
+        }
+    }
+
+    @Subcommand("gelbooru")
+    @CommandPermission("ohmynsfw.use.gelbooru")
+    fun onGelbooru(player: Player, @Optional tags: String = "") {
+        ImageMap.request(player) {
+            GelbooruImageProvider().getRandomImage(*tags.split(" ").toTypedArray())
         }
     }
 
