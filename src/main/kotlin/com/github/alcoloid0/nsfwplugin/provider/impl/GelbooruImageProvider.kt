@@ -22,7 +22,6 @@ import com.github.alcoloid0.nsfwplugin.provider.dto.GelbooruPostListDto
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.bukkit.Bukkit
 import java.net.URI
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
