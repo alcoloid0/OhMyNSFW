@@ -30,7 +30,7 @@ import java.net.URI
 private typealias ThingListingLinkDto = RedditThingDto<RedditListingDto<RedditLinkDto>>
 
 class RedditImageProvider(subreddit: String) : ImageProvider {
-    private val jsonUri = URI("https://www.reddit.com/r/$subreddit.json?sort=top&t=daily")
+    private val jsonUri = URI("https://www.reddit.com/r/$subreddit.json?sort=top&t=daily&limit=100")
 
     override suspend fun getRandomUri(vararg extra: String) = withContext(Dispatchers.IO) {
         val mainThing: ThingListingLinkDto = jsonUri.toURL().openStream().reader()
