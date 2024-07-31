@@ -31,4 +31,17 @@ enum class NsfwSubreddit {
     Just18,                 // https://www.reddit.com/r/just18/
     IWantToFuckHer,         // https://www.reddit.com/r/iWantToFuckHer/
     SexyGirls,              // https://www.reddit.com/r/sexygirls/
+    Exxxtras,               // https://www.reddit.com/r/exxxtras
+    RealGirls,              // https://www.reddit.com/r/realgirls
+    Amateur,                // https://www.reddit.com/r/amateur
+    GoneWild,               // https://www.reddit.com/r/GoneWild
+    Snapleaks,              // https://www.reddit.com/r/snapleaks
+    Rule34,                 // https://www.reddit.com/r/rule34
+    Ecchi,                  // https://www.reddit.com/r/ecchi
+    Futanari,               // https://www.reddit.com/r/futanari
+    Hentai_IRL,             // https://www.reddit.com/r/hentai_irl
+    Blowjobs,               // https://www.reddit.com/r/blowjobs
+    Ass,                    // https://www.reddit.com/r/ass
+    TinyTits,               // https://www.reddit.com/r/tinytits
+    Pussy,                  // https://www.reddit.com/r/pussy
 }
