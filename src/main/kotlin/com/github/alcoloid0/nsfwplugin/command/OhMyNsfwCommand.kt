@@ -38,33 +38,25 @@ class OhMyNsfwCommand {
     @Subcommand("nekobot")
     @CommandPermission("ohmynsfw.use.nekobot")
     fun onNekoBot(player: Player, imageType: NekoBotImageType) {
-        ImageMap.request(player) {
-            NekoBotImageProvider().getRandomImage(imageType.toString())
-        }
+        ImageMap.request(player, NekoBotImageProvider(imageType))
     }
 
     @Subcommand("rule34")
     @CommandPermission("ohmynsfw.use.rule34")
     fun onRule34(player: Player, @Optional tags: String = "") {
-        ImageMap.request(player) {
-            Rule34ImageProvider().getRandomImage(*tags.split(" ").toTypedArray())
-        }
+        ImageMap.request(player, Rule34ImageProvider(tags))
     }
 
     @Subcommand("reddit")
     @CommandPermission("ohmynsfw.use.reddit")
     fun onReddit(player: Player, subreddit: NsfwSubreddit) {
-        ImageMap.request(player) {
-            RedditImageProvider(subreddit.name).getRandomImage()
-        }
+        ImageMap.request(player, RedditImageProvider(subreddit))
     }
 
     @Subcommand("gelbooru")
     @CommandPermission("ohmynsfw.use.gelbooru")
     fun onGelbooru(player: Player, @Optional tags: String = "") {
-        ImageMap.request(player) {
-            GelbooruImageProvider().getRandomImage(*tags.split(" ").toTypedArray())
-        }
+        ImageMap.request(player, GelbooruImageProvider(tags))
     }
 
     @Subcommand("reload")

@@ -21,6 +21,7 @@ import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
 import com.github.alcoloid0.nsfwplugin.extra.displayName
 import com.github.alcoloid0.nsfwplugin.extra.lore
 import com.github.alcoloid0.nsfwplugin.extra.sendSettingsMessage
+import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -67,17 +68,14 @@ object ImageMap {
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    inline fun request(
-        offlinePlayer: OfflinePlayer,
-        crossinline lazyImage: suspend () -> BufferedImage
-    ) {
+    fun request(offlinePlayer: OfflinePlayer, imageProvider: ImageProvider) {
         val handler = CoroutineExceptionHandler { _, _ ->
             offlinePlayer.player?.sendSettingsMessage("request-error-occurred")
         }
 
         GlobalScope.launch(handler) {
             launch {
-                val itemStack = createItemStack(lazyImage())
+                val itemStack = createItemStack(imageProvider.getRandomImage())
 
                 OhMyNsfwPlugin.runBukkitTask {
                     offlinePlayer.player?.inventory?.addItem(itemStack)
