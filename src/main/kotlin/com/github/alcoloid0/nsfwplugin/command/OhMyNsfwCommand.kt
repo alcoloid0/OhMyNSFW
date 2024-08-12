@@ -22,10 +22,16 @@ import com.github.alcoloid0.nsfwplugin.extra.NekoBotImageType
 import com.github.alcoloid0.nsfwplugin.extra.NsfwSubreddit
 import com.github.alcoloid0.nsfwplugin.extra.sendSettingsMessage
 import com.github.alcoloid0.nsfwplugin.map.ImageMap
+import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
 import com.github.alcoloid0.nsfwplugin.provider.impl.GelbooruImageProvider
 import com.github.alcoloid0.nsfwplugin.provider.impl.NekoBotImageProvider
 import com.github.alcoloid0.nsfwplugin.provider.impl.RedditImageProvider
 import com.github.alcoloid0.nsfwplugin.provider.impl.Rule34ImageProvider
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import revxrsal.commands.annotation.Command
 import revxrsal.commands.annotation.Optional
@@ -37,27 +43,19 @@ import revxrsal.commands.bukkit.annotation.CommandPermission
 class OhMyNsfwCommand {
     @Subcommand("nekobot")
     @CommandPermission("ohmynsfw.use.nekobot")
-    fun onNekoBot(player: Player, imageType: NekoBotImageType) {
-        ImageMap.request(player, NekoBotImageProvider(imageType))
-    }
+    fun onNekoBot(player: Player, imageType: NekoBotImageType) = request(player, NekoBotImageProvider(imageType))
 
     @Subcommand("rule34")
     @CommandPermission("ohmynsfw.use.rule34")
-    fun onRule34(player: Player, @Optional tags: String = "") {
-        ImageMap.request(player, Rule34ImageProvider(tags))
-    }
+    fun onRule34(player: Player, @Optional tags: String = "") = request(player, Rule34ImageProvider(tags))
 
     @Subcommand("reddit")
     @CommandPermission("ohmynsfw.use.reddit")
-    fun onReddit(player: Player, subreddit: NsfwSubreddit) {
-        ImageMap.request(player, RedditImageProvider(subreddit))
-    }
+    fun onReddit(player: Player, subreddit: NsfwSubreddit) = request(player, RedditImageProvider(subreddit))
 
     @Subcommand("gelbooru")
     @CommandPermission("ohmynsfw.use.gelbooru")
-    fun onGelbooru(player: Player, @Optional tags: String = "") {
-        ImageMap.request(player, GelbooruImageProvider(tags))
-    }
+    fun onGelbooru(player: Player, @Optional tags: String = "") = request(player, GelbooruImageProvider(tags))
 
     @Subcommand("reload")
     @CommandPermission("ohmynsfw.reload")
@@ -65,4 +63,26 @@ class OhMyNsfwCommand {
         OhMyNsfwPlugin.settings.reload()
         actor.sender.sendSettingsMessage("settings-reloaded")
     }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun request(offlinePlayer: OfflinePlayer, imageProvider: ImageProvider) {
+        val handler = CoroutineExceptionHandler { _, _ ->
+            offlinePlayer.player?.sendSettingsMessage("request-error-occurred")
+        }
+
+        GlobalScope.launch(handler) {
+            launch {
+                val itemStack = ImageMap.createItemStack(imageProvider.getRandomImage())
+
+                OhMyNsfwPlugin.runBukkitTask {
+                    offlinePlayer.player?.inventory?.addItem(itemStack)
+                    offlinePlayer.player?.sendSettingsMessage("request-complete")
+                    ImageMap.cacheService.cacheItemStack(itemStack)
+                }
+            }
+
+            offlinePlayer.player?.sendSettingsMessage("request-prepare")
+        }
+    }
+
 }

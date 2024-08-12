@@ -20,15 +20,8 @@ package com.github.alcoloid0.nsfwplugin.map
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
 import com.github.alcoloid0.nsfwplugin.extra.displayName
 import com.github.alcoloid0.nsfwplugin.extra.lore
-import com.github.alcoloid0.nsfwplugin.extra.sendSettingsMessage
-import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.OfflinePlayer
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
@@ -65,26 +58,5 @@ object ImageMap {
         }
 
         return itemStack.also { stack -> stack.itemMeta = itemMeta }
-    }
-
-    @OptIn(DelicateCoroutinesApi::class)
-    fun request(offlinePlayer: OfflinePlayer, imageProvider: ImageProvider) {
-        val handler = CoroutineExceptionHandler { _, _ ->
-            offlinePlayer.player?.sendSettingsMessage("request-error-occurred")
-        }
-
-        GlobalScope.launch(handler) {
-            launch {
-                val itemStack = createItemStack(imageProvider.getRandomImage())
-
-                OhMyNsfwPlugin.runBukkitTask {
-                    offlinePlayer.player?.inventory?.addItem(itemStack)
-                    offlinePlayer.player?.sendSettingsMessage("request-complete")
-                    cacheService.cacheItemStack(itemStack)
-                }
-            }
-
-            offlinePlayer.player?.sendSettingsMessage("request-prepare")
-        }
     }
 }
