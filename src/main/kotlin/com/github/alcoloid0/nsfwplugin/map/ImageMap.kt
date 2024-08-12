@@ -32,6 +32,7 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.MapMeta
+import org.bukkit.map.MapPalette
 import java.awt.image.BufferedImage
 
 object ImageMap {
@@ -58,7 +59,7 @@ object ImageMap {
 
             mapView = Bukkit.createMap(Bukkit.getWorlds().first()).apply {
                 renderers.clear()
-                addRenderer(ImageMapRenderer(image))
+                addRenderer(ImageMapRenderer(MapPalette.resizeImage(image)))
             }
         }
 
@@ -76,10 +77,9 @@ object ImageMap {
 
         GlobalScope.launch(handler) {
             launch {
-                val image = lazyImage()
+                val itemStack = createItemStack(lazyImage())
 
                 OhMyNsfwPlugin.runBukkitTask {
-                    val itemStack = createItemStack(image)
                     offlinePlayer.player?.inventory?.addItem(itemStack)
                     offlinePlayer.player?.sendSettingsMessage("request-complete")
                     cacheService.cacheItemStack(itemStack)

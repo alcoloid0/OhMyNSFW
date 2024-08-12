@@ -19,19 +19,16 @@ package com.github.alcoloid0.nsfwplugin.map
 
 import org.bukkit.entity.Player
 import org.bukkit.map.MapCanvas
-import org.bukkit.map.MapPalette
 import org.bukkit.map.MapRenderer
 import org.bukkit.map.MapView
 import java.awt.image.BufferedImage
 
-class ImageMapRenderer(image: BufferedImage) : MapRenderer() {
+class ImageMapRenderer(val image: BufferedImage) : MapRenderer() {
     private var redrawNeeded: Boolean = true
-
-    val image: BufferedImage = MapPalette.resizeImage(image)
 
     override fun render(view: MapView, canvas: MapCanvas, player: Player) {
         if (redrawNeeded) {
-            canvas.drawImage(0, 0, MapPalette.resizeImage(image))
+            canvas.drawImage(0, 0, image)
             redrawNeeded = false
         }
     }

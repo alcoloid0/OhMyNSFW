@@ -38,8 +38,7 @@ class SettingsLocaleReader(private val settings: Settings) : LocaleReader {
     override fun getLocale(): Locale = Locales.ENGLISH
 
     companion object {
-        // HACK: Lamp does not support formatting in MiniMessage tags and instead
-        //       uses {0}, {1}, etc.
+        // HACK: Lamp does not support formatting in MiniMessage tags and instead uses {0}, {1}, etc.
         private val ARGUMENT_TAG_RESOLVER = TagResolver.resolver(
             Placeholder.parsed("parameter", "{0}"),
             Placeholder.parsed("argument", "{0}"),
