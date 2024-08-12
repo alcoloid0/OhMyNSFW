@@ -17,6 +17,7 @@
 
 package com.github.alcoloid0.nsfwplugin.provider.impl
 
+import com.github.alcoloid0.nsfwplugin.extra.NekoBotImageType
 import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
 import com.github.alcoloid0.nsfwplugin.provider.dto.NekoBotResultDto
 import com.google.gson.Gson
@@ -24,11 +25,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.URI
 
-class NekoBotImageProvider : ImageProvider {
-    override suspend fun getRandomUri(vararg extra: String) = withContext(Dispatchers.IO) {
-        val url = URI("$BASE_URL?type=${extra.first()}").toURL()
+class NekoBotImageProvider(imageType: NekoBotImageType) : ImageProvider() {
+    private val jsonUri = URI("$BASE_URL?type=$imageType")
 
-        val result = url.openStream().reader()
+    override suspend fun getRandomImageUri() = withContext(Dispatchers.IO) {
+        val result = jsonUri.toURL().openStream().reader()
             .use { Gson().fromJson(it, NekoBotResultDto::class.java) }
 
         check(result.success) { "NekoBot API Get Request Failed: ${result.message}" }

@@ -27,14 +27,12 @@ import java.net.URI
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-class Rule34ImageProvider : ImageProvider {
-    override suspend fun getRandomUri(vararg extra: String) = withContext(Dispatchers.IO) {
-        val tags = extra.joinToString(" ")
-            .let { URLEncoder.encode(it, StandardCharsets.UTF_8.name()) }
+class Rule34ImageProvider(tags: String) : ImageProvider() {
+    private val encodedTags = URLEncoder.encode(tags, StandardCharsets.UTF_8.name())
+    private val jsonUri = URI("$BASE_URL?page=dapi&s=post&q=index&json=1&tags=$encodedTags")
 
-        val url = URI("$BASE_URL?page=dapi&s=post&q=index&json=1&tags=$tags").toURL()
-
-        val entries = url.openStream().reader()
+    override suspend fun getRandomImageUri() = withContext(Dispatchers.IO) {
+        val entries = jsonUri.toURL().openStream().reader()
             .use { reader -> Gson().fromJson(reader, TYPE_TOKEN) as List<GelbooruPostDto> }
             .filter { entry -> entry.image.substringAfterLast('.') in FILE_EXTENSIONS }
 

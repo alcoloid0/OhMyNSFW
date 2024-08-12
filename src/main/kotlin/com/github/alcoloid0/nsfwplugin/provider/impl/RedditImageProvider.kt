@@ -17,6 +17,7 @@
 
 package com.github.alcoloid0.nsfwplugin.provider.impl
 
+import com.github.alcoloid0.nsfwplugin.extra.NsfwSubreddit
 import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
 import com.github.alcoloid0.nsfwplugin.provider.dto.RedditListingDto
 import com.github.alcoloid0.nsfwplugin.provider.dto.RedditThingDto
@@ -29,10 +30,10 @@ import java.net.URI
 
 private typealias ThingListingLinkDto = RedditThingDto<RedditListingDto<RedditLinkDto>>
 
-class RedditImageProvider(subreddit: String) : ImageProvider {
+class RedditImageProvider(subreddit: NsfwSubreddit) : ImageProvider() {
     private val jsonUri = URI("https://www.reddit.com/r/$subreddit.json?sort=top&t=daily&limit=100")
 
-    override suspend fun getRandomUri(vararg extra: String) = withContext(Dispatchers.IO) {
+    override suspend fun getRandomImageUri() = withContext(Dispatchers.IO) {
         val mainThing: ThingListingLinkDto = jsonUri.toURL().openStream().reader()
             .use { reader -> Gson().fromJson(reader.readText(), TYPE_TOKEN) }
 

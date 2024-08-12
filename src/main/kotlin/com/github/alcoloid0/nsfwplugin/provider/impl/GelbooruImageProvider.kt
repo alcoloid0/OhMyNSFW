@@ -19,6 +19,7 @@ package com.github.alcoloid0.nsfwplugin.provider.impl
 
 import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
 import com.github.alcoloid0.nsfwplugin.provider.dto.GelbooruPostListDto
+import com.github.alcoloid0.nsfwplugin.provider.impl.Rule34ImageProvider.Companion
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -26,14 +27,12 @@ import java.net.URI
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-class GelbooruImageProvider : ImageProvider {
-    override suspend fun getRandomUri(vararg extra: String) = withContext(Dispatchers.IO) {
-        val tags = extra.joinToString(" ")
-            .let { URLEncoder.encode(it, StandardCharsets.UTF_8.name()) }
+class GelbooruImageProvider(tags: String) : ImageProvider() {
+    private val encodedTags = URLEncoder.encode(tags, StandardCharsets.UTF_8.name())
+    private val jsonUri = URI("$BASE_URL?page=dapi&s=post&q=index&json=1&tags=$encodedTags")
 
-        val url = URI("$BASE_URL?page=dapi&s=post&q=index&json=1&tags=$tags").toURL()
-
-        val postList = url.openStream().reader()
+    override suspend fun getRandomImageUri() = withContext(Dispatchers.IO) {
+        val postList = jsonUri.toURL().openStream().reader()
             .use { reader -> Gson().fromJson(reader, GelbooruPostListDto::class.java) }
 
         val posts = postList.post

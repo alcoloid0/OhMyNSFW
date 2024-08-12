@@ -22,10 +22,10 @@ import kotlinx.coroutines.withContext
 import java.net.URI
 import javax.imageio.ImageIO
 
-interface ImageProvider {
-    suspend fun getRandomUri(vararg extra: String): URI
+abstract class ImageProvider {
+    abstract suspend fun getRandomImageUri(): URI
 
-    suspend fun getRandomImage(vararg extra: String) = withContext(Dispatchers.IO) {
-        ImageIO.read(getRandomUri(*extra).toURL())!!
+    suspend fun getRandomImage() = withContext(Dispatchers.IO) {
+        ImageIO.read(getRandomImageUri().toURL())!!
     }
 }
