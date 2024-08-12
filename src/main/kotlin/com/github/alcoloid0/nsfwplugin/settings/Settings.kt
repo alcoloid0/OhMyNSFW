@@ -17,8 +17,8 @@
 
 package com.github.alcoloid0.nsfwplugin.settings
 
-import com.github.alcoloid0.nsfwplugin.extra.AdventureSerializer
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin
@@ -37,15 +37,12 @@ class Settings(private val plugin: Plugin) {
     inline fun <reified T> value(path: String): T? = yamlConfiguration.get(path) as T?
 
     fun component(path: String, vararg tags: TagResolver): Component? {
-        return value<String>(path)?.let {
-            AdventureSerializer.MINI_MESSAGE.deserialize(it, TagResolver.resolver(*tags))
-        }
+        return value<String>(path)?.let { MINI_MESSAGE.deserialize(it, TagResolver.resolver(*tags)) }
     }
 
     fun componentList(path: String, vararg tags: TagResolver): List<Component> {
-        return value<List<String>>(path)?.map {
-            AdventureSerializer.MINI_MESSAGE.deserialize(it, TagResolver.resolver(*tags))
-        } ?: emptyList()
+        val value = value<List<String>>(path)
+        return value?.map { MINI_MESSAGE.deserialize(it, TagResolver.resolver(*tags)) } ?: emptyList()
     }
 
     fun message(key: String, vararg tags: TagResolver): Component {
@@ -55,14 +52,13 @@ class Settings(private val plugin: Plugin) {
     }
 
     fun reload() {
-        if (Files.notExists(yamlFilePath)) {
-            plugin.saveResource(FILE_NAME, false)
-        }
+        if (Files.notExists(yamlFilePath)) plugin.saveResource(FILE_NAME, false)
 
         yamlConfiguration = YamlConfiguration.loadConfiguration(yamlFilePath.toFile())
     }
 
     companion object {
         private const val FILE_NAME = "settings.yml"
+        private val MINI_MESSAGE = MiniMessage.miniMessage()
     }
 }

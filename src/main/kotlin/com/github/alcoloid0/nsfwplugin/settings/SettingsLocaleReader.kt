@@ -17,7 +17,7 @@
 
 package com.github.alcoloid0.nsfwplugin.settings
 
-import com.github.alcoloid0.nsfwplugin.extra.AdventureSerializer
+import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import revxrsal.commands.locales.LocaleReader
@@ -30,9 +30,7 @@ class SettingsLocaleReader(private val settings: Settings) : LocaleReader {
     }
 
     override fun get(key: String?): String {
-        val component = settings.message(key!!, ARGUMENT_TAG_RESOLVER)
-
-        return AdventureSerializer.LEGACY.serialize(component)
+        return LEGACY_SERIALIZER.serialize(settings.message(key!!, ARGUMENT_TAG_RESOLVER))
     }
 
     override fun getLocale(): Locale = Locales.ENGLISH
@@ -44,5 +42,7 @@ class SettingsLocaleReader(private val settings: Settings) : LocaleReader {
             Placeholder.parsed("argument", "{0}"),
             Placeholder.parsed("input", "{1}")
         )
+
+        private val LEGACY_SERIALIZER = BukkitComponentSerializer.legacy()
     }
 }

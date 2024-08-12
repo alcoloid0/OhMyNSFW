@@ -21,7 +21,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC")
     implementation("com.github.Revxrsal.Lamp:common:3.2.1")
     implementation("com.github.Revxrsal.Lamp:bukkit:3.2.1")
-    implementation("net.kyori:adventure-platform-bukkit:4.3.3")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.4")
     implementation("net.kyori:adventure-text-minimessage:4.17.0")
 }
 
@@ -49,7 +49,8 @@ tasks.processResources {
 }
 
 tasks.shadowJar {
-    relocate("net.kyori.adventure", "com.github.alcoloid0.shaded.kyori.adventure")
+    relocate("net.kyori.adventure", "com.github.alcoloid0.nsfwplugin.shaded.adventure")
+    relocate("net.kyori.option","com.github.alcoloid0.nsfwplugin.shaded.option")
 }
 
 tasks.withType<KotlinJvmCompile> {

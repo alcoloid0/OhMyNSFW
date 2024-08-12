@@ -18,23 +18,22 @@
 package com.github.alcoloid0.nsfwplugin.extra
 
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
+import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 import org.bukkit.inventory.meta.ItemMeta
 
-fun CommandSender.sendSettingsMessage(key: String, vararg tags: TagResolver) {
-    val component = OhMyNsfwPlugin.settings.message(key, *tags)
+private val LEGACY_SERIALIZER = BukkitComponentSerializer.legacy()
 
-    // HACK: Adventure BukkitAudiences is broken in Paper 1.21 (?)
-    //  -- net.kyori:adventure-platform-bukkit:4.3.3
-    sendMessage(AdventureSerializer.LEGACY.serialize(component))
+fun CommandSender.sendSettingsMessage(key: String, vararg tags: TagResolver) {
+    OhMyNsfwPlugin.adventure.sender(this).sendMessage(OhMyNsfwPlugin.settings.message(key, *tags))
 }
 
 fun ItemMeta.displayName(component: Component?) {
-    setDisplayName(component?.let(AdventureSerializer.LEGACY::serialize))
+    setDisplayName(component?.let(LEGACY_SERIALIZER::serialize))
 }
 
 fun ItemMeta.lore(components: List<Component>?) {
-    lore = components?.map(AdventureSerializer.LEGACY::serialize)
+    lore = components?.map(LEGACY_SERIALIZER::serialize)
 }
