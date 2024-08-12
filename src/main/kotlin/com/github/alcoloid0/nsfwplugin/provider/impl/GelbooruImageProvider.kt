@@ -19,7 +19,6 @@ package com.github.alcoloid0.nsfwplugin.provider.impl
 
 import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
 import com.github.alcoloid0.nsfwplugin.provider.dto.GelbooruPostListDto
-import com.github.alcoloid0.nsfwplugin.provider.impl.Rule34ImageProvider.Companion
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -28,8 +27,10 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 class GelbooruImageProvider(tags: String) : ImageProvider() {
+    override val baseUrl: String = "https://gelbooru.com"
+
     private val encodedTags = URLEncoder.encode(tags, StandardCharsets.UTF_8.name())
-    private val jsonUri = URI("$BASE_URL?page=dapi&s=post&q=index&json=1&tags=$encodedTags")
+    private val jsonUri = URI("$baseUrl/index.php?page=dapi&s=post&q=index&json=1&tags=$encodedTags")
 
     override suspend fun getRandomImageUri() = withContext(Dispatchers.IO) {
         val postList = jsonUri.toURL().openStream().reader()
@@ -42,7 +43,6 @@ class GelbooruImageProvider(tags: String) : ImageProvider() {
     }
 
     companion object {
-        private const val BASE_URL = "https://gelbooru.com/index.php"
         private val FILE_EXTENSIONS = setOf("jpg", "png", "jpeg")
     }
 }

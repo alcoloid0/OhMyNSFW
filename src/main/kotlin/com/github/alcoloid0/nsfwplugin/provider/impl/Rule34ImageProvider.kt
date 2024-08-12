@@ -28,8 +28,10 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 class Rule34ImageProvider(tags: String) : ImageProvider() {
+    override val baseUrl: String = "https://api.rule34.xxx"
+
     private val encodedTags = URLEncoder.encode(tags, StandardCharsets.UTF_8.name())
-    private val jsonUri = URI("$BASE_URL?page=dapi&s=post&q=index&json=1&tags=$encodedTags")
+    private val jsonUri = URI("$baseUrl/index.php?page=dapi&s=post&q=index&json=1&tags=$encodedTags")
 
     override suspend fun getRandomImageUri() = withContext(Dispatchers.IO) {
         val entries = jsonUri.toURL().openStream().reader()
@@ -40,7 +42,6 @@ class Rule34ImageProvider(tags: String) : ImageProvider() {
     }
 
     companion object {
-        private const val BASE_URL = "https://api.rule34.xxx/index.php"
         private val FILE_EXTENSIONS = setOf("jpg", "png", "jpeg")
         private val TYPE_TOKEN = object : TypeToken<List<GelbooruPostDto>>() {}.type
     }

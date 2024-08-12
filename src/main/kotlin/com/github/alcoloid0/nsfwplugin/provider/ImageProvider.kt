@@ -23,6 +23,8 @@ import java.net.URI
 import javax.imageio.ImageIO
 
 abstract class ImageProvider {
+    abstract val baseUrl: String
+
     abstract suspend fun getRandomImageUri(): URI
 
     suspend fun getRandomImage() = withContext(Dispatchers.IO) {

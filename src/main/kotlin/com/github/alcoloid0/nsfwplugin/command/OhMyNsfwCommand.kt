@@ -31,6 +31,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import revxrsal.commands.annotation.Command
@@ -66,8 +67,10 @@ class OhMyNsfwCommand {
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun request(offlinePlayer: OfflinePlayer, imageProvider: ImageProvider) {
+        val placeholder = Placeholder.unparsed("url", imageProvider.baseUrl)
+
         val handler = CoroutineExceptionHandler { _, _ ->
-            offlinePlayer.player?.sendSettingsMessage("request-error-occurred")
+            offlinePlayer.player?.sendSettingsMessage("request-error-occurred", placeholder)
         }
 
         GlobalScope.launch(handler) {
@@ -76,12 +79,12 @@ class OhMyNsfwCommand {
 
                 OhMyNsfwPlugin.runBukkitTask {
                     offlinePlayer.player?.inventory?.addItem(itemStack)
-                    offlinePlayer.player?.sendSettingsMessage("request-complete")
+                    offlinePlayer.player?.sendSettingsMessage("request-complete", placeholder)
                     ImageMap.cacheService.cacheItemStack(itemStack)
                 }
             }
 
-            offlinePlayer.player?.sendSettingsMessage("request-prepare")
+            offlinePlayer.player?.sendSettingsMessage("request-prepare", placeholder)
         }
     }
 

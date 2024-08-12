@@ -26,7 +26,9 @@ import kotlinx.coroutines.withContext
 import java.net.URI
 
 class NekoBotImageProvider(imageType: NekoBotImageType) : ImageProvider() {
-    private val jsonUri = URI("$BASE_URL?type=$imageType")
+    override val baseUrl: String = "https://nekobot.xyz"
+
+    private val jsonUri = URI("$baseUrl/api/image?type=$imageType")
 
     override suspend fun getRandomImageUri() = withContext(Dispatchers.IO) {
         val result = jsonUri.toURL().openStream().reader()
@@ -35,9 +37,5 @@ class NekoBotImageProvider(imageType: NekoBotImageType) : ImageProvider() {
         check(result.success) { "NekoBot API Get Request Failed: ${result.message}" }
 
         URI(result.message)
-    }
-
-    companion object {
-        private const val BASE_URL = "https://nekobot.xyz/api/image"
     }
 }
