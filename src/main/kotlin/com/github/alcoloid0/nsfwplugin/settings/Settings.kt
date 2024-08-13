@@ -17,18 +17,20 @@
 
 package com.github.alcoloid0.nsfwplugin.settings
 
+import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.configuration.file.YamlConfiguration
-import org.bukkit.plugin.Plugin
+import java.net.InetSocketAddress
+import java.net.Proxy
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.name
 
-class Settings(private val plugin: Plugin) {
-    private val yamlFilePath: Path = plugin.dataFolder.toPath().resolve(FILE_NAME)
-
+class Settings(private val settingsPath: Path) {
     lateinit var yamlConfiguration: YamlConfiguration private set
+    lateinit var proxy: Proxy private set
 
     init {
         reload()
@@ -36,29 +38,47 @@ class Settings(private val plugin: Plugin) {
 
     inline fun <reified T> value(path: String): T? = yamlConfiguration.get(path) as T?
 
-    fun component(path: String, vararg tags: TagResolver): Component? {
-        return value<String>(path)?.let { MINI_MESSAGE.deserialize(it, TagResolver.resolver(*tags)) }
+    fun component(path: String, tagResolver: TagResolver = TagResolver.empty()): Component {
+        return value<String>(path)?.let { MINI_MESSAGE.deserialize(it, tagResolver) } ?: Component.empty()
     }
 
-    fun componentList(path: String, vararg tags: TagResolver): List<Component> {
-        val value = value<List<String>>(path)
-        return value?.map { MINI_MESSAGE.deserialize(it, TagResolver.resolver(*tags)) } ?: emptyList()
+    fun componentList(path: String, tagResolver: TagResolver = TagResolver.empty()): List<Component> {
+        return value<List<String>>(path)?.map { MINI_MESSAGE.deserialize(it, tagResolver) } ?: emptyList()
     }
 
-    fun message(key: String, vararg tags: TagResolver): Component {
-        val prefix = component("message-prefix", *tags) ?: Component.empty()
-        val message = component("message.$key", *tags) ?: Component.empty()
-        return prefix.append(message)
+    fun message(key: String, tagResolver: TagResolver = TagResolver.empty()): Component {
+        return component("message-prefix", tagResolver).append(component("message.$key", tagResolver))
     }
 
     fun reload() {
-        if (Files.notExists(yamlFilePath)) plugin.saveResource(FILE_NAME, false)
+        if (Files.notExists(settingsPath)) {
+            OhMyNsfwPlugin.instance.saveResource(settingsPath.fileName.name, false)
+        }
 
-        yamlConfiguration = YamlConfiguration.loadConfiguration(yamlFilePath.toFile())
+        yamlConfiguration = YamlConfiguration.loadConfiguration(settingsPath.toFile())
+
+        updateProxy()
+    }
+
+    private fun updateProxy() {
+        try {
+            val proxyType = value<String>("proxy-settings.type")?.let {
+                Proxy.Type.valueOf(it.uppercase())
+            }
+
+            if (proxyType != null && proxyType != Proxy.Type.DIRECT) {
+                val (hostname, port) = value<String>("proxy-settings.address")!!.split(":")
+
+                proxy = Proxy(proxyType, InetSocketAddress(hostname, port.toInt()))
+                return
+            }
+        } catch (_: Exception) {
+        }
+
+        proxy = Proxy.NO_PROXY
     }
 
     companion object {
-        private const val FILE_NAME = "settings.yml"
         private val MINI_MESSAGE = MiniMessage.miniMessage()
     }
 }

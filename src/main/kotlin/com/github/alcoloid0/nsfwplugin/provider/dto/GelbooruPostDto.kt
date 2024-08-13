@@ -20,26 +20,7 @@ package com.github.alcoloid0.nsfwplugin.provider.dto
 import com.google.gson.annotations.SerializedName
 
 data class GelbooruPostDto(
-    @SerializedName("preview_url") val previewUrl: String,
-    @SerializedName("sample_url") val sampleUrl: String,
     @SerializedName("file_url") val fileUrl: String,
-    val directory: Int,
-    val hash: String,
-    val width: Int,
-    val height: Int,
-    val id: Int,
     val image: String,
-    val change: Int,
-    val owner: String,
-    @SerializedName("parent_id") val parentId: Int,
-    val rating: String,
-    val sample: Boolean,
-    @SerializedName("sample_height") val sampleHeight: Int,
-    @SerializedName("sample_width") val sampleWidth: Int,
-    val score: Int,
-    val tags: String,
-    val source: String,
-    val status: String,
-    @SerializedName("has_notes") val hasNotes: Boolean,
-    @SerializedName("comment_count") val commentCount: Int,
+    // skip...
 )

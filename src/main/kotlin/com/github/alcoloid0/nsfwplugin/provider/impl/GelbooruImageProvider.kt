@@ -18,31 +18,33 @@
 package com.github.alcoloid0.nsfwplugin.provider.impl
 
 import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
+import com.github.alcoloid0.nsfwplugin.provider.dto.GelbooruPostDto
 import com.github.alcoloid0.nsfwplugin.provider.dto.GelbooruPostListDto
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.net.URI
+import java.net.Proxy
+import java.net.URL
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-class GelbooruImageProvider(tags: String) : ImageProvider() {
-    override val baseUrl: String = "https://gelbooru.com"
+open class GelbooruImageProvider(proxy: Proxy, vararg tags: String) : ImageProvider(proxy) {
+    override val name = "gelbooru"
 
-    private val encodedTags = URLEncoder.encode(tags, StandardCharsets.UTF_8.name())
-    private val jsonUri = URI("$baseUrl/index.php?page=dapi&s=post&q=index&json=1&tags=$encodedTags")
+    private val encodedTags = URLEncoder.encode(tags.joinToString(" "), StandardCharsets.UTF_8.name())
 
-    override suspend fun getRandomImageUri() = withContext(Dispatchers.IO) {
-        val postList = jsonUri.toURL().openStream().reader()
+    protected open val apiUrl = "https://gelbooru.com/index.php"
+
+    protected val jsonURL: URL get() = URL("$apiUrl?page=dapi&s=post&q=index&json=1&tags=$encodedTags")
+
+    override suspend fun getRandomImageUrl(): URL = withContext(Dispatchers.IO) {
+        val postList = jsonURL.inputStream().reader()
             .use { reader -> Gson().fromJson(reader, GelbooruPostListDto::class.java) }
 
-        val posts = postList.post
-            .filter { entry -> entry.image.substringAfterLast('.') in FILE_EXTENSIONS }
-
-        URI(posts.random().fileUrl)
+        postList.post.randomImageFileUrl()
     }
 
-    companion object {
-        private val FILE_EXTENSIONS = setOf("jpg", "png", "jpeg")
+    protected fun List<GelbooruPostDto>.randomImageFileUrl(): URL {
+        return URL(filter { it.image.substringAfterLast('.') in FILE_EXTENSIONS }.random().fileUrl)
     }
 }

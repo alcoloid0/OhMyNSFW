@@ -17,17 +17,29 @@
 
 package com.github.alcoloid0.nsfwplugin.provider
 
+import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.net.URI
+import java.io.InputStream
+import java.net.Proxy
+import java.net.URL
 import javax.imageio.ImageIO
 
-abstract class ImageProvider {
-    abstract val baseUrl: String
+abstract class ImageProvider(private val proxy: Proxy) {
+    abstract val name: String
 
-    abstract suspend fun getRandomImageUri(): URI
+    abstract suspend fun getRandomImageUrl(): URL
 
     suspend fun getRandomImage() = withContext(Dispatchers.IO) {
-        ImageIO.read(getRandomImageUri().toURL())!!
+        getRandomImageUrl().inputStream().use { inputStream -> ImageIO.read(inputStream) }!!
+    }
+
+    protected fun URL.inputStream(): InputStream = openConnection(proxy).apply {
+        val description = OhMyNsfwPlugin.instance.description
+        setRequestProperty("User-Agent", "${description.name} v${description.version}")
+    }.getInputStream()
+
+    companion object {
+        val FILE_EXTENSIONS = setOf("jpg", "png", "jpeg")
     }
 }

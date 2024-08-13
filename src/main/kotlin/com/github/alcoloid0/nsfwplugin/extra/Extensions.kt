@@ -21,13 +21,15 @@ import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
 import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.inventory.meta.ItemMeta
+import org.bukkit.plugin.Plugin
 
 private val LEGACY_SERIALIZER = BukkitComponentSerializer.legacy()
 
-fun CommandSender.sendSettingsMessage(key: String, vararg tags: TagResolver) {
-    OhMyNsfwPlugin.adventure.sender(this).sendMessage(OhMyNsfwPlugin.settings.message(key, *tags))
+fun CommandSender.sendSettingsMessage(key: String, tagResolver: TagResolver = TagResolver.empty()) {
+    OhMyNsfwPlugin.adventure.sender(this).sendMessage(OhMyNsfwPlugin.settings.message(key, tagResolver))
 }
 
 fun ItemMeta.displayName(component: Component?) {
@@ -37,3 +39,5 @@ fun ItemMeta.displayName(component: Component?) {
 fun ItemMeta.lore(components: List<Component>?) {
     lore = components?.map(LEGACY_SERIALIZER::serialize)
 }
+
+fun Plugin.runBukkitTask(task: () -> Unit) = Bukkit.getScheduler().runTask(this, Runnable(task))

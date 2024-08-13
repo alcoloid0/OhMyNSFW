@@ -17,32 +17,27 @@
 
 package com.github.alcoloid0.nsfwplugin.provider.impl
 
-import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
 import com.github.alcoloid0.nsfwplugin.provider.dto.GelbooruPostDto
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.net.URI
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import java.net.Proxy
 
-class Rule34ImageProvider(tags: String) : ImageProvider() {
-    override val baseUrl: String = "https://api.rule34.xxx"
+// "Running Gelbooru Beta 0.2"
+class Rule34ImageProvider(proxy: Proxy, vararg tags: String) : GelbooruImageProvider(proxy, *tags) {
+    override val name = "rule34"
 
-    private val encodedTags = URLEncoder.encode(tags, StandardCharsets.UTF_8.name())
-    private val jsonUri = URI("$baseUrl/index.php?page=dapi&s=post&q=index&json=1&tags=$encodedTags")
+    override val apiUrl = "https://api.rule34.xxx"
 
-    override suspend fun getRandomImageUri() = withContext(Dispatchers.IO) {
-        val entries = jsonUri.toURL().openStream().reader()
+    override suspend fun getRandomImageUrl() = withContext(Dispatchers.IO) {
+        val posts = jsonURL.inputStream().reader()
             .use { reader -> Gson().fromJson(reader, TYPE_TOKEN) as List<GelbooruPostDto> }
-            .filter { entry -> entry.image.substringAfterLast('.') in FILE_EXTENSIONS }
 
-        URI(entries.random().fileUrl)
+        posts.randomImageFileUrl()
     }
 
     companion object {
-        private val FILE_EXTENSIONS = setOf("jpg", "png", "jpeg")
         private val TYPE_TOKEN = object : TypeToken<List<GelbooruPostDto>>() {}.type
     }
 }

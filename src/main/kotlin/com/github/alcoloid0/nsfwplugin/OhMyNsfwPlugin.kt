@@ -18,12 +18,11 @@
 package com.github.alcoloid0.nsfwplugin
 
 import com.github.alcoloid0.nsfwplugin.command.OhMyNsfwCommand
-import com.github.alcoloid0.nsfwplugin.settings.SettingsLocaleReader
-import com.github.alcoloid0.nsfwplugin.settings.Settings
 import com.github.alcoloid0.nsfwplugin.listener.MapInitializeListener
 import com.github.alcoloid0.nsfwplugin.map.ImageMapCacheService
+import com.github.alcoloid0.nsfwplugin.settings.Settings
+import com.github.alcoloid0.nsfwplugin.settings.SettingsLocaleReader
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
-import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import revxrsal.commands.bukkit.BukkitCommandHandler
 import kotlin.io.path.Path
@@ -36,7 +35,7 @@ class OhMyNsfwPlugin : JavaPlugin() {
         instance = this
 
         adventure = BukkitAudiences.create(this)
-        settings = Settings(this)
+        settings = Settings(Path(dataFolder.path, "settings.yml"))
         cacheService = ImageMapCacheService(Path(dataFolder.path, "cache"))
 
         commandHandler = BukkitCommandHandler.create(this)
@@ -55,14 +54,9 @@ class OhMyNsfwPlugin : JavaPlugin() {
     }
 
     companion object {
-        private lateinit var instance: OhMyNsfwPlugin
-
+        lateinit var instance: OhMyNsfwPlugin private set
         lateinit var settings: Settings private set
         lateinit var cacheService: ImageMapCacheService private set
         lateinit var adventure: BukkitAudiences private set
-
-        fun runBukkitTask(task: () -> Unit) {
-            Bukkit.getScheduler().runTask(instance, Runnable(task))
-        }
     }
 }

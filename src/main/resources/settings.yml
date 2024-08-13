@@ -10,9 +10,13 @@ map-item-settings:
     - ''
   glow-effect: true
 
+proxy-settings:
+  type: DIRECT # DIRECT, HTTP, SOCKS
+  address: '127.0.0.1:8080'
+
 message: # https://docs.advntr.dev/minimessage/format.html
-  settings-reloaded: '<yellow>Plugin settings reloaded.'
-  request-prepare: '<white>Hold on! We''re loading the NSFW content up on the server right now.'
+  settings-reloaded: '<yellow>Plugin settings reloaded. (<ms>ms)'
+  request-prepare: '<white>Hold on! We''re loading the NSFW content up on the server right now. (<name>)'
   request-error-occurred: '<red>Oh no! There were some technical issues while loading NSFW content.'
   request-complete: '<white>You''ve been given a map <u>with a bit of adult content...</u> Yummy!'
   must-be-player: '<red>You must be a player to use this command!'

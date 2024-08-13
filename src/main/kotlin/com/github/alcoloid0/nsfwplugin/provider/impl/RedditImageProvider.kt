@@ -19,34 +19,34 @@ package com.github.alcoloid0.nsfwplugin.provider.impl
 
 import com.github.alcoloid0.nsfwplugin.extra.NsfwSubreddit
 import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
+import com.github.alcoloid0.nsfwplugin.provider.dto.RedditLinkDto
 import com.github.alcoloid0.nsfwplugin.provider.dto.RedditListingDto
 import com.github.alcoloid0.nsfwplugin.provider.dto.RedditThingDto
-import com.github.alcoloid0.nsfwplugin.provider.dto.RedditLinkDto
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.net.URI
+import java.net.Proxy
+import java.net.URL
 
 private typealias ThingListingLinkDto = RedditThingDto<RedditListingDto<RedditLinkDto>>
 
-class RedditImageProvider(subreddit: NsfwSubreddit) : ImageProvider() {
-    override val baseUrl: String = "https://www.reddit.com"
+class RedditImageProvider(proxy: Proxy, subreddit: NsfwSubreddit) : ImageProvider(proxy) {
+    override val name = "r/$subreddit"
 
-    private val jsonUri = URI("$baseUrl/r/$subreddit.json?sort=top&t=daily&limit=100")
+    private val jsonUrl = URL("https://www.reddit.com/r/$subreddit.json?sort=top&t=daily&limit=100")
 
-    override suspend fun getRandomImageUri() = withContext(Dispatchers.IO) {
-        val mainThing: ThingListingLinkDto = jsonUri.toURL().openStream().reader()
-            .use { reader -> Gson().fromJson(reader.readText(), TYPE_TOKEN) }
+    override suspend fun getRandomImageUrl(): URL = withContext(Dispatchers.IO) {
+        val mainThing: ThingListingLinkDto = jsonUrl.inputStream().reader()
+            .use { reader -> Gson().fromJson(reader, TYPE_TOKEN) }
 
         val links = mainThing.data.children.map { thing -> thing.data }
             .filter { link -> link.url.substringAfterLast('.') in FILE_EXTENSIONS }
 
-        URI(links.random().url)
+        URL(links.random().url)
     }
 
     companion object {
-        private val FILE_EXTENSIONS = setOf("jpg", "png", "jpeg")
         private val TYPE_TOKEN = object : TypeToken<ThingListingLinkDto>() {}.type
     }
 }
