@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.map
+package com.github.alcoloid0.nsfwplugin.image.map
 
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.MapMeta

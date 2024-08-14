@@ -15,12 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.provider.dto
+package com.github.alcoloid0.nsfwplugin.image.provider.dto
 
-import com.google.gson.annotations.SerializedName
-
-data class GelbooruPostDto(
-    @SerializedName("file_url") val fileUrl: String,
-    val image: String,
-    // skip...
+data class NekoBotResultDto(
+    val success: Boolean,
+    val message: String,
+    val color: Int,
+    val version: String
 )

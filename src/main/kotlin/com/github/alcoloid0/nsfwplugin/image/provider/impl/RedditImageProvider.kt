@@ -15,13 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.provider.impl
+package com.github.alcoloid0.nsfwplugin.image.provider.impl
 
 import com.github.alcoloid0.nsfwplugin.extra.NsfwSubreddit
-import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
-import com.github.alcoloid0.nsfwplugin.provider.dto.RedditLinkDto
-import com.github.alcoloid0.nsfwplugin.provider.dto.RedditListingDto
-import com.github.alcoloid0.nsfwplugin.provider.dto.RedditThingDto
+import com.github.alcoloid0.nsfwplugin.image.provider.ImageProvider
+import com.github.alcoloid0.nsfwplugin.image.provider.dto.RedditLinkDto
+import com.github.alcoloid0.nsfwplugin.image.provider.dto.RedditListingDto
+import com.github.alcoloid0.nsfwplugin.image.provider.dto.RedditThingDto
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers

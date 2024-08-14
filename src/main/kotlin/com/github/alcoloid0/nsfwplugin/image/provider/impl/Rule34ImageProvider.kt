@@ -15,28 +15,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.provider.impl
+package com.github.alcoloid0.nsfwplugin.image.provider.impl
 
-import com.github.alcoloid0.nsfwplugin.extra.NekoBotImageType
-import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
-import com.github.alcoloid0.nsfwplugin.provider.dto.NekoBotResultDto
+import com.github.alcoloid0.nsfwplugin.image.provider.dto.GelbooruPostDto
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.Proxy
-import java.net.URL
 
-class NekoBotImageProvider(proxy: Proxy, imageType: NekoBotImageType) : ImageProvider(proxy) {
-    override val name = "nekobot.xyz"
+// "Running Gelbooru Beta 0.2"
+class Rule34ImageProvider(proxy: Proxy, vararg tags: String) : GelbooruImageProvider(proxy, *tags) {
+    override val name = "rule34"
 
-    private val jsonUrl = URL("https://nekobot.xyz/api/image?type=${imageType.name.lowercase()}")
+    override val apiUrl = "https://api.rule34.xxx"
 
-    override suspend fun getRandomImageUrl(): URL = withContext(Dispatchers.IO) {
-        val result = jsonUrl.inputStream().reader()
-            .use { reader -> Gson().fromJson(reader, NekoBotResultDto::class.java) }
+    override suspend fun getRandomImageUrl() = withContext(Dispatchers.IO) {
+        val posts = jsonURL.inputStream().reader()
+            .use { reader -> Gson().fromJson(reader, TYPE_TOKEN) as List<GelbooruPostDto> }
 
-        check(result.success) { "NekoBot API Get Request Failed: ${result.message}" }
+        posts.randomImageFileUrl()
+    }
 
-        URL(result.message)
+    companion object {
+        private val TYPE_TOKEN = object : TypeToken<List<GelbooruPostDto>>() {}.type
     }
 }

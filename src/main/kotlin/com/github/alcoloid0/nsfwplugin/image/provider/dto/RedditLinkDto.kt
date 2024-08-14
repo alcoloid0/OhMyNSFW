@@ -15,11 +15,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.provider.dto
+package com.github.alcoloid0.nsfwplugin.image.provider.dto
 
-data class NekoBotResultDto(
-    val success: Boolean,
-    val message: String,
-    val color: Int,
-    val version: String
-)
+data class RedditLinkDto(val url: String, /* skip... */)

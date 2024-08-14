@@ -17,8 +17,8 @@
 
 package com.github.alcoloid0.nsfwplugin.listener
 
-import com.github.alcoloid0.nsfwplugin.map.ImageMap
-import com.github.alcoloid0.nsfwplugin.map.ImageMapRenderer
+import com.github.alcoloid0.nsfwplugin.image.map.ImageMap
+import com.github.alcoloid0.nsfwplugin.image.map.ImageMapRenderer
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.server.MapInitializeEvent

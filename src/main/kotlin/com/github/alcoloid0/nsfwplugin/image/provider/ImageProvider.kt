@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.provider
+package com.github.alcoloid0.nsfwplugin.image.provider
 
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
 import kotlinx.coroutines.Dispatchers

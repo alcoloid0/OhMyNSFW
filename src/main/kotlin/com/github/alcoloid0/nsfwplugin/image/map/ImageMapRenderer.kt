@@ -15,6 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.provider.dto
+package com.github.alcoloid0.nsfwplugin.image.map
 
-data class RedditThingDto<T>(val kind: String, val data: T)
+import org.bukkit.entity.Player
+import org.bukkit.map.MapCanvas
+import org.bukkit.map.MapRenderer
+import org.bukkit.map.MapView
+import java.awt.image.BufferedImage
+
+class ImageMapRenderer(val image: BufferedImage) : MapRenderer() {
+    private var redrawNeeded: Boolean = true
+
+    override fun render(view: MapView, canvas: MapCanvas, player: Player) {
+        if (redrawNeeded) {
+            canvas.drawImage(0, 0, image)
+            redrawNeeded = false
+        }
+    }
+}

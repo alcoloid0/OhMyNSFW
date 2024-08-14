@@ -15,21 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.map
+package com.github.alcoloid0.nsfwplugin.image.provider.dto
 
-import org.bukkit.entity.Player
-import org.bukkit.map.MapCanvas
-import org.bukkit.map.MapRenderer
-import org.bukkit.map.MapView
-import java.awt.image.BufferedImage
+import com.google.gson.annotations.SerializedName
 
-class ImageMapRenderer(val image: BufferedImage) : MapRenderer() {
-    private var redrawNeeded: Boolean = true
-
-    override fun render(view: MapView, canvas: MapCanvas, player: Player) {
-        if (redrawNeeded) {
-            canvas.drawImage(0, 0, image)
-            redrawNeeded = false
-        }
-    }
-}
+data class GelbooruPostDto(
+    @SerializedName("file_url") val fileUrl: String,
+    val image: String,
+    // skip...
+)

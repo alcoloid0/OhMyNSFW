@@ -15,11 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.provider.impl
+package com.github.alcoloid0.nsfwplugin.image.provider.impl
 
-import com.github.alcoloid0.nsfwplugin.provider.ImageProvider
-import com.github.alcoloid0.nsfwplugin.provider.dto.GelbooruPostDto
-import com.github.alcoloid0.nsfwplugin.provider.dto.GelbooruPostListDto
+import com.github.alcoloid0.nsfwplugin.image.provider.ImageProvider
+import com.github.alcoloid0.nsfwplugin.image.provider.dto.GelbooruPostDto
+import com.github.alcoloid0.nsfwplugin.image.provider.dto.GelbooruPostListDto
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

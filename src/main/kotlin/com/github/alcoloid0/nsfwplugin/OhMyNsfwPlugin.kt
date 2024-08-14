@@ -19,7 +19,7 @@ package com.github.alcoloid0.nsfwplugin
 
 import com.github.alcoloid0.nsfwplugin.command.OhMyNsfwCommand
 import com.github.alcoloid0.nsfwplugin.listener.MapInitializeListener
-import com.github.alcoloid0.nsfwplugin.map.ImageMapCacheService
+import com.github.alcoloid0.nsfwplugin.image.map.ImageMapCacheService
 import com.github.alcoloid0.nsfwplugin.settings.Settings
 import com.github.alcoloid0.nsfwplugin.settings.SettingsLocaleReader
 import net.kyori.adventure.platform.bukkit.BukkitAudiences

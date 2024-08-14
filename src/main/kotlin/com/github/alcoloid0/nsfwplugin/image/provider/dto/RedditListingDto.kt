@@ -15,6 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.provider.dto
+package com.github.alcoloid0.nsfwplugin.image.provider.dto
 
-data class RedditLinkDto(val url: String, /* skip... */)
+data class RedditListingDto<T>(
+    val before: String,
+    val after: String,
+    val modhash: String,
+    val children: List<RedditThingDto<T>>
+)
