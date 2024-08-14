@@ -18,10 +18,12 @@
 package com.github.alcoloid0.nsfwplugin.settings
 
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
+import com.github.alcoloid0.nsfwplugin.extra.HttpHelper
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.configuration.file.YamlConfiguration
+import sun.net.www.http.HttpClient
 import java.net.InetSocketAddress
 import java.net.Proxy
 import java.nio.file.Files
@@ -30,7 +32,6 @@ import kotlin.io.path.name
 
 class Settings(private val settingsPath: Path) {
     lateinit var yamlConfiguration: YamlConfiguration private set
-    lateinit var proxy: Proxy private set
 
     init {
         reload()
@@ -57,10 +58,10 @@ class Settings(private val settingsPath: Path) {
 
         yamlConfiguration = YamlConfiguration.loadConfiguration(settingsPath.toFile())
 
-        updateProxy()
+        HttpHelper.proxy = getProxy()
     }
 
-    private fun updateProxy() {
+    private fun getProxy(): Proxy {
         try {
             val proxyType = value<String>("proxy-settings.type")?.let {
                 Proxy.Type.valueOf(it.uppercase())
@@ -69,13 +70,12 @@ class Settings(private val settingsPath: Path) {
             if (proxyType != null && proxyType != Proxy.Type.DIRECT) {
                 val (hostname, port) = value<String>("proxy-settings.address")!!.split(":")
 
-                proxy = Proxy(proxyType, InetSocketAddress(hostname, port.toInt()))
-                return
+                return Proxy(proxyType, InetSocketAddress(hostname, port.toInt()))
             }
         } catch (_: Exception) {
         }
 
-        proxy = Proxy.NO_PROXY
+        return Proxy.NO_PROXY
     }
 
     companion object {

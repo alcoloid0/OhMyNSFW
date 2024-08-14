@@ -47,25 +47,25 @@ class OhMyNsfwCommand {
     @Subcommand("nekobot")
     @CommandPermission("ohmynsfw.use.nekobot")
     fun onNekoBot(player: Player, imageType: NekoBotImageType) {
-        request(player, NekoBotImageProvider(OhMyNsfwPlugin.settings.proxy, imageType))
+        request(player, NekoBotImageProvider(imageType))
     }
 
     @Subcommand("rule34")
     @CommandPermission("ohmynsfw.use.rule34")
     fun onRule34(player: Player, @Optional tags: String = "") {
-        request(player, Rule34ImageProvider(OhMyNsfwPlugin.settings.proxy, tags))
+        request(player, Rule34ImageProvider(tags))
     }
 
     @Subcommand("reddit")
     @CommandPermission("ohmynsfw.use.reddit")
     fun onReddit(player: Player, subreddit: NsfwSubreddit) {
-        request(player, RedditImageProvider(OhMyNsfwPlugin.settings.proxy, subreddit))
+        request(player, RedditImageProvider(subreddit))
     }
 
     @Subcommand("gelbooru")
     @CommandPermission("ohmynsfw.use.gelbooru")
     fun onGelbooru(player: Player, @Optional tags: String = "") {
-        request(player, GelbooruImageProvider(OhMyNsfwPlugin.settings.proxy, tags))
+        request(player, GelbooruImageProvider(tags))
     }
 
     @Subcommand("reload")

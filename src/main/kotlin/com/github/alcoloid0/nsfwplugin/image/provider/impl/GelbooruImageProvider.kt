@@ -17,18 +17,16 @@
 
 package com.github.alcoloid0.nsfwplugin.image.provider.impl
 
+import com.github.alcoloid0.nsfwplugin.extra.HttpHelper
 import com.github.alcoloid0.nsfwplugin.image.provider.ImageProvider
 import com.github.alcoloid0.nsfwplugin.image.provider.dto.GelbooruPostDto
 import com.github.alcoloid0.nsfwplugin.image.provider.dto.GelbooruPostListDto
-import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.net.Proxy
+import kotlinx.coroutines.coroutineScope
 import java.net.URL
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-open class GelbooruImageProvider(proxy: Proxy, vararg tags: String) : ImageProvider(proxy) {
+open class GelbooruImageProvider(vararg tags: String) : ImageProvider() {
     override val name = "gelbooru"
 
     private val encodedTags = URLEncoder.encode(tags.joinToString(" "), StandardCharsets.UTF_8.name())
@@ -37,11 +35,8 @@ open class GelbooruImageProvider(proxy: Proxy, vararg tags: String) : ImageProvi
 
     protected val jsonURL: URL get() = URL("$apiUrl?page=dapi&s=post&q=index&json=1&tags=$encodedTags")
 
-    override suspend fun getRandomImageUrl(): URL = withContext(Dispatchers.IO) {
-        val postList = jsonURL.inputStream().reader()
-            .use { reader -> Gson().fromJson(reader, GelbooruPostListDto::class.java) }
-
-        postList.post.randomImageFileUrl()
+    override suspend fun getRandomImageUrl(): URL = coroutineScope {
+        HttpHelper.fetchJson(jsonURL, GelbooruPostListDto::class.java).post.randomImageFileUrl()
     }
 
     protected fun List<GelbooruPostDto>.randomImageFileUrl(): URL {

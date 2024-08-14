@@ -17,24 +17,19 @@
 
 package com.github.alcoloid0.nsfwplugin.image.provider.impl
 
+import com.github.alcoloid0.nsfwplugin.extra.HttpHelper
 import com.github.alcoloid0.nsfwplugin.image.provider.dto.GelbooruPostDto
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.net.Proxy
+import kotlinx.coroutines.coroutineScope
 
 // "Running Gelbooru Beta 0.2"
-class Rule34ImageProvider(proxy: Proxy, vararg tags: String) : GelbooruImageProvider(proxy, *tags) {
+class Rule34ImageProvider(vararg tags: String) : GelbooruImageProvider(*tags) {
     override val name = "rule34"
 
     override val apiUrl = "https://api.rule34.xxx"
 
-    override suspend fun getRandomImageUrl() = withContext(Dispatchers.IO) {
-        val posts = jsonURL.inputStream().reader()
-            .use { reader -> Gson().fromJson(reader, TYPE_TOKEN) as List<GelbooruPostDto> }
-
-        posts.randomImageFileUrl()
+    override suspend fun getRandomImageUrl() = coroutineScope {
+        HttpHelper.fetchJson<List<GelbooruPostDto>>(jsonURL, TYPE_TOKEN).randomImageFileUrl()
     }
 
     companion object {
