@@ -22,6 +22,7 @@ import com.github.alcoloid0.nsfwplugin.listener.MapInitializeListener
 import com.github.alcoloid0.nsfwplugin.image.map.ImageMapCacheService
 import com.github.alcoloid0.nsfwplugin.settings.Settings
 import com.github.alcoloid0.nsfwplugin.settings.SettingsLocaleReader
+import com.github.alcoloid0.nsfwplugin.util.PluginBukkitScheduler
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.plugin.java.JavaPlugin
 import revxrsal.commands.bukkit.BukkitCommandHandler
@@ -34,6 +35,7 @@ class OhMyNsfwPlugin : JavaPlugin() {
     override fun onEnable() = with(measureTime {
         instance = this
 
+        scheduler = PluginBukkitScheduler(this)
         adventure = BukkitAudiences.create(this)
         settings = Settings(Path(dataFolder.path, "settings.yml"))
         cacheService = ImageMapCacheService(Path(dataFolder.path, "cache"))
@@ -55,8 +57,10 @@ class OhMyNsfwPlugin : JavaPlugin() {
 
     companion object {
         lateinit var instance: OhMyNsfwPlugin private set
+
         lateinit var settings: Settings private set
         lateinit var cacheService: ImageMapCacheService private set
         lateinit var adventure: BukkitAudiences private set
+        lateinit var scheduler: PluginBukkitScheduler private set
     }
 }

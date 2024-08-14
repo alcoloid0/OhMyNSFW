@@ -18,8 +18,8 @@
 package com.github.alcoloid0.nsfwplugin.image.map
 
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
-import com.github.alcoloid0.nsfwplugin.util.displayName
-import com.github.alcoloid0.nsfwplugin.util.lore
+import com.github.alcoloid0.nsfwplugin.util.extensions.displayName
+import com.github.alcoloid0.nsfwplugin.util.extensions.lore
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment

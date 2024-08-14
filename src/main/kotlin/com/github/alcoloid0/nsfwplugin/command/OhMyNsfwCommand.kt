@@ -20,14 +20,15 @@ package com.github.alcoloid0.nsfwplugin.command
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
 import com.github.alcoloid0.nsfwplugin.util.NekoBotImageType
 import com.github.alcoloid0.nsfwplugin.util.NsfwSubreddit
-import com.github.alcoloid0.nsfwplugin.util.runBukkitTask
-import com.github.alcoloid0.nsfwplugin.util.sendSettingsMessage
 import com.github.alcoloid0.nsfwplugin.image.map.ImageMap
 import com.github.alcoloid0.nsfwplugin.image.provider.ImageProvider
 import com.github.alcoloid0.nsfwplugin.image.provider.impl.GelbooruImageProvider
 import com.github.alcoloid0.nsfwplugin.image.provider.impl.NekoBotImageProvider
 import com.github.alcoloid0.nsfwplugin.image.provider.impl.RedditImageProvider
 import com.github.alcoloid0.nsfwplugin.image.provider.impl.Rule34ImageProvider
+import com.github.alcoloid0.nsfwplugin.settings.Settings
+import com.github.alcoloid0.nsfwplugin.util.extensions.sendMessage
+import com.github.alcoloid0.nsfwplugin.util.extensions.sendSettingsMessage
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -44,6 +45,8 @@ import kotlin.time.measureTime
 
 @Command("ohmynsfw", "nsfw")
 class OhMyNsfwCommand {
+    private val settings: Settings by OhMyNsfwPlugin.Companion::settings
+
     @Subcommand("nekobot")
     @CommandPermission("ohmynsfw.use.nekobot")
     fun onNekoBot(player: Player, imageType: NekoBotImageType) {
@@ -71,30 +74,32 @@ class OhMyNsfwCommand {
     @Subcommand("reload")
     @CommandPermission("ohmynsfw.reload")
     fun onReload(actor: BukkitCommandActor) {
-        val millis = measureTime { OhMyNsfwPlugin.settings.reload() }.inWholeMilliseconds
-        actor.sender.sendSettingsMessage("settings-reloaded", Placeholder.unparsed("ms", "$millis"))
+        val millis = measureTime { settings.reload() }.inWholeMilliseconds
+        val millisPlaceholder = Placeholder.unparsed("ms", "$millis")
+
+        actor.sender.sendSettingsMessage("settings-reloaded", millisPlaceholder)
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun request(offlinePlayer: OfflinePlayer, imageProvider: ImageProvider) {
-        val namePlaceholder = Placeholder.unparsed("name", imageProvider.name)
+        val placeholder = Placeholder.unparsed("name", imageProvider.name)
 
         val handler = CoroutineExceptionHandler { _, _ ->
-            offlinePlayer.player?.sendSettingsMessage("request-error-occurred", namePlaceholder)
+            offlinePlayer.player?.sendSettingsMessage("request-error-occurred", placeholder)
         }
 
         GlobalScope.launch(handler) {
             launch {
                 val itemStack = ImageMap.createItemStack(imageProvider.getRandomImage())
 
-                OhMyNsfwPlugin.instance.runBukkitTask {
+                OhMyNsfwPlugin.scheduler.runTask {
                     offlinePlayer.player?.inventory?.addItem(itemStack)
-                    offlinePlayer.player?.sendSettingsMessage("request-complete", namePlaceholder)
+                    offlinePlayer.player?.sendSettingsMessage("request-complete", placeholder)
                     ImageMap.cacheService.cacheItemStack(itemStack)
                 }
             }
 
-            offlinePlayer.player?.sendSettingsMessage("request-prepare", namePlaceholder)
+            offlinePlayer.player?.sendSettingsMessage("request-prepare", placeholder)
         }
     }
 }
