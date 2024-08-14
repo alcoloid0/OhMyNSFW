@@ -18,12 +18,11 @@
 package com.github.alcoloid0.nsfwplugin.settings
 
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
-import com.github.alcoloid0.nsfwplugin.extra.HttpHelper
+import com.github.alcoloid0.nsfwplugin.util.HttpHelper
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.configuration.file.YamlConfiguration
-import sun.net.www.http.HttpClient
 import java.net.InetSocketAddress
 import java.net.Proxy
 import java.nio.file.Files

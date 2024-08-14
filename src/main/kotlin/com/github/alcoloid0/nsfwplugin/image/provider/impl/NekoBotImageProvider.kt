@@ -17,8 +17,8 @@
 
 package com.github.alcoloid0.nsfwplugin.image.provider.impl
 
-import com.github.alcoloid0.nsfwplugin.extra.HttpHelper
-import com.github.alcoloid0.nsfwplugin.extra.NekoBotImageType
+import com.github.alcoloid0.nsfwplugin.util.HttpHelper
+import com.github.alcoloid0.nsfwplugin.util.NekoBotImageType
 import com.github.alcoloid0.nsfwplugin.image.provider.ImageProvider
 import com.github.alcoloid0.nsfwplugin.image.provider.dto.NekoBotResultDto
 import kotlinx.coroutines.coroutineScope

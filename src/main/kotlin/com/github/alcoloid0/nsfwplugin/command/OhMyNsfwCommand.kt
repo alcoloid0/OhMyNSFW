@@ -18,10 +18,10 @@
 package com.github.alcoloid0.nsfwplugin.command
 
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
-import com.github.alcoloid0.nsfwplugin.extra.NekoBotImageType
-import com.github.alcoloid0.nsfwplugin.extra.NsfwSubreddit
-import com.github.alcoloid0.nsfwplugin.extra.runBukkitTask
-import com.github.alcoloid0.nsfwplugin.extra.sendSettingsMessage
+import com.github.alcoloid0.nsfwplugin.util.NekoBotImageType
+import com.github.alcoloid0.nsfwplugin.util.NsfwSubreddit
+import com.github.alcoloid0.nsfwplugin.util.runBukkitTask
+import com.github.alcoloid0.nsfwplugin.util.sendSettingsMessage
 import com.github.alcoloid0.nsfwplugin.image.map.ImageMap
 import com.github.alcoloid0.nsfwplugin.image.provider.ImageProvider
 import com.github.alcoloid0.nsfwplugin.image.provider.impl.GelbooruImageProvider

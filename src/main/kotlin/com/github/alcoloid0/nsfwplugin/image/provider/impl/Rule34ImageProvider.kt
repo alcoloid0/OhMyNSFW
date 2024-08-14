@@ -17,7 +17,7 @@
 
 package com.github.alcoloid0.nsfwplugin.image.provider.impl
 
-import com.github.alcoloid0.nsfwplugin.extra.HttpHelper
+import com.github.alcoloid0.nsfwplugin.util.HttpHelper
 import com.github.alcoloid0.nsfwplugin.image.provider.dto.GelbooruPostDto
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.coroutineScope

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.extra
+package com.github.alcoloid0.nsfwplugin.util
 
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
 import com.google.gson.Gson
