@@ -28,6 +28,7 @@ import com.github.alcoloid0.nsfwplugin.image.provider.impl.NekoBotImageProvider
 import com.github.alcoloid0.nsfwplugin.image.provider.impl.RedditImageProvider
 import com.github.alcoloid0.nsfwplugin.image.provider.impl.Rule34ImageProvider
 import com.github.alcoloid0.nsfwplugin.settings.Settings
+import com.github.alcoloid0.nsfwplugin.util.HttpHelper
 import com.github.alcoloid0.nsfwplugin.util.extensions.sendSettingsMessage
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -76,6 +77,7 @@ class OhMyNsfwCommand {
     @CommandPermission("ohmynsfw.reload")
     fun onReload(actor: BukkitCommandActor) = with(measureTime {
         settings.reload()
+        HttpHelper.proxy = settings.proxy()
     }) {
         actor.sender.sendSettingsMessage(
             "settings-reloaded", Placeholder.unparsed("millis", "$inWholeMilliseconds")

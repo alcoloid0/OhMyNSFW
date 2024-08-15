@@ -22,6 +22,7 @@ import com.github.alcoloid0.nsfwplugin.listener.MapInitializeListener
 import com.github.alcoloid0.nsfwplugin.image.map.ImageMapCacheService
 import com.github.alcoloid0.nsfwplugin.settings.Settings
 import com.github.alcoloid0.nsfwplugin.settings.SettingsLocaleReader
+import com.github.alcoloid0.nsfwplugin.util.HttpHelper
 import com.github.alcoloid0.nsfwplugin.util.PluginBukkitScheduler
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.plugin.java.JavaPlugin
@@ -35,11 +36,12 @@ class OhMyNsfwPlugin : JavaPlugin() {
     override fun onEnable() = with(measureTime {
         instance = this
 
-
         adventure = BukkitAudiences.create(this)
         settings = Settings(Path(dataFolder.path, "settings.yml"))
         scheduler = PluginBukkitScheduler(this)
         cacheService = ImageMapCacheService(Path(dataFolder.path, "cache"))
+
+        HttpHelper.proxy = settings.proxy()
 
         commandHandler = BukkitCommandHandler.create(this)
         commandHandler.translator.add(SettingsLocaleReader(settings))

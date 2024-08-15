@@ -18,7 +18,6 @@
 package com.github.alcoloid0.nsfwplugin.settings
 
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
-import com.github.alcoloid0.nsfwplugin.util.HttpHelper
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -50,17 +49,7 @@ class Settings(private val settingsPath: Path) {
         return component("message-prefix", tagResolver).append(component("message.$key", tagResolver))
     }
 
-    fun reload() {
-        if (Files.notExists(settingsPath)) {
-            OhMyNsfwPlugin.instance.saveResource(settingsPath.fileName.name, false)
-        }
-
-        yamlConfiguration = YamlConfiguration.loadConfiguration(settingsPath.toFile())
-
-        HttpHelper.proxy = getProxy()
-    }
-
-    private fun getProxy(): Proxy {
+    fun proxy(): Proxy {
         try {
             val proxyType = value<String>("proxy-settings.type")?.let {
                 Proxy.Type.valueOf(it.uppercase())
@@ -75,6 +64,14 @@ class Settings(private val settingsPath: Path) {
         }
 
         return Proxy.NO_PROXY
+    }
+
+    fun reload() {
+        if (Files.notExists(settingsPath)) {
+            OhMyNsfwPlugin.instance.saveResource(settingsPath.fileName.name, false)
+        }
+
+        yamlConfiguration = YamlConfiguration.loadConfiguration(settingsPath.toFile())
     }
 
     companion object {
