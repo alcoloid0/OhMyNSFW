@@ -108,9 +108,11 @@ class OhMyNsfwCommand {
             val itemStack = ImageMap.createItemStack(metadataImage.download(), metadataResolver)
 
             OhMyNsfwPlugin.scheduler.runTask {
-                offlinePlayer.player?.inventory?.addItem(itemStack)
-                offlinePlayer.player?.sendSettingsMessage("request-complete", metadataResolver)
-                ImageMap.cacheItemStack(itemStack)
+                offlinePlayer.player?.run {
+                    inventory.addItem(itemStack)
+                    sendSettingsMessage("request-complete", metadataResolver)
+                    ImageMap.cacheItemStack(itemStack)
+                }
             }
         }
 
