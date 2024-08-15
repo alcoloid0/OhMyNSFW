@@ -28,10 +28,12 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.MapMeta
 import org.bukkit.map.MapPalette
+import org.bukkit.map.MapView
 import java.awt.image.BufferedImage
 
 object ImageMap {
-    val cacheService: ImageMapCacheService by OhMyNsfwPlugin.Companion::cacheService
+    private val cacheService by OhMyNsfwPlugin.Companion::cacheService
+    private val settings by OhMyNsfwPlugin.Companion::settings
 
     fun createItemStack(
         image: BufferedImage,
@@ -39,7 +41,7 @@ object ImageMap {
     ): ItemStack {
         val itemStack = ItemStack(Material.FILLED_MAP)
 
-        if (OhMyNsfwPlugin.settings.value<Boolean>("map-item-settings.glow-effect") == true) {
+        if (settings.value<Boolean>("map-item-settings.glow-effect") == true) {
             itemStack.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 1)
         }
 
@@ -52,15 +54,25 @@ object ImageMap {
 
             addItemFlags(ItemFlag.HIDE_ENCHANTS, hideItemSpecifics)
 
-            lore(OhMyNsfwPlugin.settings.componentList("map-item-settings.lore", tagResolver))
-            displayName(OhMyNsfwPlugin.settings.component("map-item-settings.name", tagResolver))
+            lore(settings.componentList("map-item-settings.lore", tagResolver))
+            displayName(settings.component("map-item-settings.name", tagResolver))
 
-            mapView = Bukkit.createMap(Bukkit.getWorlds().first()).apply {
-                renderers.clear()
-                addRenderer(ImageMapRenderer(MapPalette.resizeImage(image)))
-            }
+            mapView = updateMapView(Bukkit.createMap(Bukkit.getWorlds().first()), image)
         }
 
         return itemStack.also { stack -> stack.itemMeta = itemMeta }
+    }
+
+    fun cacheItemStack(itemStack: ItemStack) = cacheService.cacheItemStack(itemStack)
+
+    fun restore(mapView: MapView) {
+        cacheService.getImage(mapView.id)?.let { image -> updateMapView(mapView, image) }
+    }
+
+    private fun updateMapView(mapView: MapView, image: BufferedImage): MapView {
+        return mapView.apply {
+            renderers.clear()
+            addRenderer(ImageMapRenderer(MapPalette.resizeImage(image)))
+        }
     }
 }

@@ -27,9 +27,6 @@ class ImageMapRenderer(val image: BufferedImage) : MapRenderer() {
     private var redrawNeeded: Boolean = true
 
     override fun render(view: MapView, canvas: MapCanvas, player: Player) {
-        if (redrawNeeded) {
-            canvas.drawImage(0, 0, image)
-            redrawNeeded = false
-        }
+        if (redrawNeeded) canvas.drawImage(0, 0, image).also { redrawNeeded = false }
     }
 }

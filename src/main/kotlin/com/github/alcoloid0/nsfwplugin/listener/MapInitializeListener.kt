@@ -18,17 +18,11 @@
 package com.github.alcoloid0.nsfwplugin.listener
 
 import com.github.alcoloid0.nsfwplugin.image.map.ImageMap
-import com.github.alcoloid0.nsfwplugin.image.map.ImageMapRenderer
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.server.MapInitializeEvent
 
 class MapInitializeListener : Listener {
     @EventHandler
-    fun onMapInitialize(event: MapInitializeEvent) {
-        ImageMap.cacheService.getImage(event.map.id)?.let { image ->
-            event.map.renderers.clear()
-            event.map.addRenderer(ImageMapRenderer(image))
-        }
-    }
+    fun onMapInitialize(event: MapInitializeEvent) = ImageMap.restore(event.map)
 }

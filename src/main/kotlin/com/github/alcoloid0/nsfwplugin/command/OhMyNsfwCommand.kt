@@ -108,7 +108,7 @@ class OhMyNsfwCommand {
             OhMyNsfwPlugin.scheduler.runTask {
                 offlinePlayer.player?.inventory?.addItem(itemStack)
                 offlinePlayer.player?.sendSettingsMessage("request-complete", metadataResolver)
-                ImageMap.cacheService.cacheItemStack(itemStack)
+                ImageMap.cacheItemStack(itemStack)
             }
         }
 
