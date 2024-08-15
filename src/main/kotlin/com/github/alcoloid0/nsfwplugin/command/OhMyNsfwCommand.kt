@@ -18,22 +18,23 @@
 package com.github.alcoloid0.nsfwplugin.command
 
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
-import com.github.alcoloid0.nsfwplugin.util.NekoBotImageType
-import com.github.alcoloid0.nsfwplugin.util.NsfwSubreddit
+import com.github.alcoloid0.nsfwplugin.image.MetadataImage
 import com.github.alcoloid0.nsfwplugin.image.map.ImageMap
 import com.github.alcoloid0.nsfwplugin.image.provider.ImageProvider
+import com.github.alcoloid0.nsfwplugin.image.provider.extra.NekoBotImageType
+import com.github.alcoloid0.nsfwplugin.image.provider.extra.NsfwSubreddit
 import com.github.alcoloid0.nsfwplugin.image.provider.impl.GelbooruImageProvider
 import com.github.alcoloid0.nsfwplugin.image.provider.impl.NekoBotImageProvider
 import com.github.alcoloid0.nsfwplugin.image.provider.impl.RedditImageProvider
 import com.github.alcoloid0.nsfwplugin.image.provider.impl.Rule34ImageProvider
 import com.github.alcoloid0.nsfwplugin.settings.Settings
-import com.github.alcoloid0.nsfwplugin.util.extensions.sendMessage
 import com.github.alcoloid0.nsfwplugin.util.extensions.sendSettingsMessage
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import revxrsal.commands.annotation.Command
@@ -50,56 +51,67 @@ class OhMyNsfwCommand {
     @Subcommand("nekobot")
     @CommandPermission("ohmynsfw.use.nekobot")
     fun onNekoBot(player: Player, imageType: NekoBotImageType) {
-        request(player, NekoBotImageProvider(imageType))
+        request(player, NekoBotImageProvider()) { it.random(imageType.name) }
     }
 
     @Subcommand("rule34")
     @CommandPermission("ohmynsfw.use.rule34")
     fun onRule34(player: Player, @Optional tags: String = "") {
-        request(player, Rule34ImageProvider(tags))
+        request(player, Rule34ImageProvider()) { it.random(*tags.split(" ").toTypedArray()) }
     }
 
     @Subcommand("reddit")
     @CommandPermission("ohmynsfw.use.reddit")
     fun onReddit(player: Player, subreddit: NsfwSubreddit) {
-        request(player, RedditImageProvider(subreddit))
+        request(player, RedditImageProvider()) { it.random(subreddit.name) }
     }
 
     @Subcommand("gelbooru")
     @CommandPermission("ohmynsfw.use.gelbooru")
     fun onGelbooru(player: Player, @Optional tags: String = "") {
-        request(player, GelbooruImageProvider(tags))
+        request(player, GelbooruImageProvider()) { it.random(*tags.split(" ").toTypedArray()) }
     }
 
     @Subcommand("reload")
     @CommandPermission("ohmynsfw.reload")
-    fun onReload(actor: BukkitCommandActor) {
-        val millis = measureTime { settings.reload() }.inWholeMilliseconds
-        val millisPlaceholder = Placeholder.unparsed("ms", "$millis")
-
-        actor.sender.sendSettingsMessage("settings-reloaded", millisPlaceholder)
+    fun onReload(actor: BukkitCommandActor) = with(measureTime {
+        settings.reload()
+    }) {
+        actor.sender.sendSettingsMessage(
+            "settings-reloaded", Placeholder.unparsed("millis", "$inWholeMilliseconds")
+        )
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    private fun request(offlinePlayer: OfflinePlayer, imageProvider: ImageProvider) {
-        val placeholder = Placeholder.unparsed("name", imageProvider.name)
+    private inline fun request(
+        offlinePlayer: OfflinePlayer,
+        imageProvider: ImageProvider,
+        crossinline lazyMetadataImage: suspend (provider: ImageProvider) -> MetadataImage
+    ) {
+        val providerPlaceholder = Placeholder.unparsed("provider", imageProvider.name)
 
         val handler = CoroutineExceptionHandler { _, _ ->
-            offlinePlayer.player?.sendSettingsMessage("request-error-occurred", placeholder)
+            offlinePlayer.player?.sendSettingsMessage("request-error-occurred", providerPlaceholder)
         }
 
         GlobalScope.launch(handler) {
-            launch {
-                val itemStack = ImageMap.createItemStack(imageProvider.getRandomImage())
+            val metadataImage = lazyMetadataImage(imageProvider)
 
-                OhMyNsfwPlugin.scheduler.runTask {
-                    offlinePlayer.player?.inventory?.addItem(itemStack)
-                    offlinePlayer.player?.sendSettingsMessage("request-complete", placeholder)
-                    ImageMap.cacheService.cacheItemStack(itemStack)
-                }
+            val metadataResolver = TagResolver.builder().resolver(providerPlaceholder)
+                .resolver(Placeholder.unparsed("directUrl", metadataImage.directUrl.toString()))
+                .resolver(Placeholder.unparsed("extraInfo", metadataImage.extraInfo ?: ""))
+                .resolver(Placeholder.unparsed("rating", if (metadataImage.isNsfw) "NSFW" else "SFW"))
+                .build()
+
+            val itemStack = ImageMap.createItemStack(metadataImage.download(), metadataResolver)
+
+            OhMyNsfwPlugin.scheduler.runTask {
+                offlinePlayer.player?.inventory?.addItem(itemStack)
+                offlinePlayer.player?.sendSettingsMessage("request-complete", metadataResolver)
+                ImageMap.cacheService.cacheItemStack(itemStack)
             }
-
-            offlinePlayer.player?.sendSettingsMessage("request-prepare", placeholder)
         }
+
+        offlinePlayer.player?.sendSettingsMessage("request-prepare", providerPlaceholder)
     }
 }

@@ -17,4 +17,12 @@
 
 package com.github.alcoloid0.nsfwplugin.image.provider.dto
 
-data class RedditLinkDto(val url: String, /* skip... */)
+import com.google.gson.annotations.SerializedName
+
+data class RedditLinkDto(
+    val url: String,
+    val subreddit: String,
+    val author: String,
+    @SerializedName("over_18") val over18: Boolean,
+    /* skip... */
+)

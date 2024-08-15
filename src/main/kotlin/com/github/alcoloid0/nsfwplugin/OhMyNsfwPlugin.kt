@@ -35,9 +35,10 @@ class OhMyNsfwPlugin : JavaPlugin() {
     override fun onEnable() = with(measureTime {
         instance = this
 
-        scheduler = PluginBukkitScheduler(this)
+
         adventure = BukkitAudiences.create(this)
         settings = Settings(Path(dataFolder.path, "settings.yml"))
+        scheduler = PluginBukkitScheduler(this)
         cacheService = ImageMapCacheService(Path(dataFolder.path, "cache"))
 
         commandHandler = BukkitCommandHandler.create(this)
@@ -58,9 +59,9 @@ class OhMyNsfwPlugin : JavaPlugin() {
     companion object {
         lateinit var instance: OhMyNsfwPlugin private set
 
-        lateinit var settings: Settings private set
-        lateinit var cacheService: ImageMapCacheService private set
         lateinit var adventure: BukkitAudiences private set
+        lateinit var settings: Settings private set
         lateinit var scheduler: PluginBukkitScheduler private set
+        lateinit var cacheService: ImageMapCacheService private set
     }
 }

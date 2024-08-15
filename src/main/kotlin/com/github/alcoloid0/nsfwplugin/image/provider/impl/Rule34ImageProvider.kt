@@ -21,15 +21,14 @@ import com.github.alcoloid0.nsfwplugin.util.HttpHelper
 import com.github.alcoloid0.nsfwplugin.image.provider.dto.GelbooruPostDto
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.coroutineScope
+import java.net.URL
 
-// "Running Gelbooru Beta 0.2"
-class Rule34ImageProvider(vararg tags: String) : GelbooruImageProvider(*tags) {
+class Rule34ImageProvider : GelbooruImageProvider() {
     override val name = "rule34"
+    override val baseUrl = "https://api.rule34.xxx" // "Running Gelbooru Beta 0.2"
 
-    override val apiUrl = "https://api.rule34.xxx"
-
-    override suspend fun getRandomImageUrl() = coroutineScope {
-        HttpHelper.fetchJson<List<GelbooruPostDto>>(jsonURL, TYPE_TOKEN).randomImageFileUrl()
+    override suspend fun fetchListOfPosts(jsonUrl: URL) = coroutineScope {
+        HttpHelper.fetchJson<List<GelbooruPostDto>>(jsonUrl, TYPE_TOKEN)
     }
 
     companion object {

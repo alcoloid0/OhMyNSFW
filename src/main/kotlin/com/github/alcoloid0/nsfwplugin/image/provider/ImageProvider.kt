@@ -17,17 +17,10 @@
 
 package com.github.alcoloid0.nsfwplugin.image.provider
 
-import com.github.alcoloid0.nsfwplugin.util.HttpHelper
-import java.net.URL
+import com.github.alcoloid0.nsfwplugin.image.MetadataImage
 
-abstract class ImageProvider {
-    abstract val name: String
+interface ImageProvider {
+    val name: String
 
-    abstract suspend fun getRandomImageUrl(): URL
-
-    suspend fun getRandomImage() = HttpHelper.fetchImage(getRandomImageUrl())
-
-    companion object {
-        val FILE_EXTENSIONS = setOf("jpg", "png", "jpeg")
-    }
+    suspend fun random(vararg extra: String): MetadataImage
 }

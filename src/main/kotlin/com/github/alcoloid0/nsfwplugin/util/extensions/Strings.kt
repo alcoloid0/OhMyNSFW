@@ -15,14 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.image.provider.dto
+package com.github.alcoloid0.nsfwplugin.util.extensions
 
-import com.google.gson.annotations.SerializedName
-
-data class GelbooruPostDto(
-    @SerializedName("file_url") val fileUrl: String,
-    val image: String,
-    val rating: String,
-    val tags: String,
-    // skip...
-)
+fun String.hasImageExtension(): Boolean {
+    return substringAfterLast('.') in setOf("png", "jpg", "jpeg")
+}

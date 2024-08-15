@@ -15,14 +15,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.image.provider.dto
+package com.github.alcoloid0.nsfwplugin.image.provider.extra
 
-import com.google.gson.annotations.SerializedName
-
-data class GelbooruPostDto(
-    @SerializedName("file_url") val fileUrl: String,
-    val image: String,
-    val rating: String,
-    val tags: String,
-    // skip...
-)
+enum class NekoBotImageType(val isNsfw: Boolean = true) {
+    HAss,
+    HMidriff,
+    `4K`,
+    Hentai,
+    Holo,
+    HNeko,
+    Neko(isNsfw = false),
+    HKitsune,
+    Kemonomimi(isNsfw = false),
+    Anal,
+    HAnal,
+    GoneWild,
+    Kanna(isNsfw = false),
+    Ass,
+    Pussy,
+    Thigh,
+    HThigh,
+    Coffee(isNsfw = false),
+    Food(isNsfw = false),
+    Paizuri,
+    Tentacle,
+    Boobs,
+    HBoobs,
+    Yaoi;
+}

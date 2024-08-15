@@ -20,6 +20,7 @@ package com.github.alcoloid0.nsfwplugin.image.map
 import com.github.alcoloid0.nsfwplugin.OhMyNsfwPlugin
 import com.github.alcoloid0.nsfwplugin.util.extensions.displayName
 import com.github.alcoloid0.nsfwplugin.util.extensions.lore
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -32,7 +33,10 @@ import java.awt.image.BufferedImage
 object ImageMap {
     val cacheService: ImageMapCacheService by OhMyNsfwPlugin.Companion::cacheService
 
-    fun createItemStack(image: BufferedImage): ItemStack {
+    fun createItemStack(
+        image: BufferedImage,
+        tagResolver: TagResolver = TagResolver.empty()
+    ): ItemStack {
         val itemStack = ItemStack(Material.FILLED_MAP)
 
         if (OhMyNsfwPlugin.settings.value<Boolean>("map-item-settings.glow-effect") == true) {
@@ -48,8 +52,8 @@ object ImageMap {
 
             addItemFlags(ItemFlag.HIDE_ENCHANTS, hideItemSpecifics)
 
-            lore(OhMyNsfwPlugin.settings.componentList("map-item-settings.lore"))
-            displayName(OhMyNsfwPlugin.settings.component("map-item-settings.name"))
+            lore(OhMyNsfwPlugin.settings.componentList("map-item-settings.lore", tagResolver))
+            displayName(OhMyNsfwPlugin.settings.component("map-item-settings.name", tagResolver))
 
             mapView = Bukkit.createMap(Bukkit.getWorlds().first()).apply {
                 renderers.clear()

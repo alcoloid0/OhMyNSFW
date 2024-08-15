@@ -17,21 +17,29 @@
 
 package com.github.alcoloid0.nsfwplugin.image.provider.impl
 
+import com.github.alcoloid0.nsfwplugin.image.MetadataImage
 import com.github.alcoloid0.nsfwplugin.util.HttpHelper
-import com.github.alcoloid0.nsfwplugin.util.NekoBotImageType
 import com.github.alcoloid0.nsfwplugin.image.provider.ImageProvider
 import com.github.alcoloid0.nsfwplugin.image.provider.dto.NekoBotResultDto
+import com.github.alcoloid0.nsfwplugin.image.provider.extra.NekoBotImageType
 import kotlinx.coroutines.coroutineScope
 import java.net.URL
 
-class NekoBotImageProvider(imageType: NekoBotImageType) : ImageProvider() {
-    override val name = "nekobot.xyz"
+class NekoBotImageProvider : ImageProvider {
+    override val name = "nekobot"
 
-    private val jsonUrl = URL("https://nekobot.xyz/api/image?type=${imageType.name.lowercase()}")
+    override suspend fun random(vararg extra: String) = coroutineScope {
+        require(extra.isNotEmpty()) { "At least one type must be provided." }
 
-    override suspend fun getRandomImageUrl(): URL = coroutineScope {
+        val imageType = NekoBotImageType.entries.find { it.name.equals(extra.first(), true) }
+
+        require(imageType != null) { "Unknown type: ${extra.first()}" }
+
+        val jsonUrl = URL("https://nekobot.xyz/api/image?type=${imageType.name.lowercase()}")
         val result: NekoBotResultDto = HttpHelper.fetchJson(jsonUrl, NekoBotResultDto::class.java)
+
         check(result.success) { "NekoBot API Get Request Failed: ${result.message}" }
-        URL(result.message)
+
+        MetadataImage(URL(result.message), imageType.name, imageType.isNsfw)
     }
 }

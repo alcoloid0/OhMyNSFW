@@ -15,11 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.alcoloid0.nsfwplugin.util
+package com.github.alcoloid0.nsfwplugin.image
 
-@Suppress("unused")
-enum class NekoBotImageType {
-    HAss, HMidriff, `4K`, Hentai, Holo, HNeko, Neko, HKitsune, Kemonomimi,
-    Anal, HAnal, GoneWild, Kanna, Ass, Pussy, Thigh, HThigh, Coffee, Food,
-    Paizuri, Tentacle, Boobs, HBoobs, Yaoi;
+import com.github.alcoloid0.nsfwplugin.util.HttpHelper
+import java.awt.image.BufferedImage
+import java.net.URL
+
+data class MetadataImage(val directUrl: URL, val extraInfo: String?, val isNsfw: Boolean) {
+    suspend fun download(): BufferedImage = HttpHelper.fetchImage(directUrl)
 }
