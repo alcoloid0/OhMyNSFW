@@ -31,6 +31,9 @@ import kotlin.io.path.name
 class Settings(private val settingsPath: Path) {
     lateinit var yamlConfiguration: YamlConfiguration private set
 
+    val debug: Boolean
+        get() = (value<Boolean>("debug") == true)
+
     init {
         reload()
     }

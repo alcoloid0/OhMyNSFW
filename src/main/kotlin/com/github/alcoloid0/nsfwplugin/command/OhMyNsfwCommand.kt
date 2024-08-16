@@ -93,8 +93,12 @@ class OhMyNsfwCommand {
     ) {
         val providerPlaceholder = Placeholder.unparsed("provider", imageProvider.name)
 
-        val handler = CoroutineExceptionHandler { _, _ ->
+        val handler = CoroutineExceptionHandler { _, throwable ->
             offlinePlayer.player?.sendSettingsMessage("request-error-occurred", providerPlaceholder)
+
+            if (settings.debug) {
+                OhMyNsfwPlugin.instance.logger.warning(throwable.stackTraceToString())
+            }
         }
 
         GlobalScope.launch(handler) {
