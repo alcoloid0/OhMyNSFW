@@ -17,6 +17,8 @@
 
 package com.github.alcoloid0.nsfwplugin.util.extensions
 
-fun String.hasImageExtension(): Boolean {
-    return substringAfterLast('.') in setOf("png", "jpg", "jpeg")
-}
+private val IMAGE_EXTENSIONS = setOf("png", "jpg", "jpeg")
+
+fun String.hasImageExtension() = substringAfterLast('.') in IMAGE_EXTENSIONS
+
+fun String.splitToArray(vararg delimiters: String) = split(*delimiters).toTypedArray()

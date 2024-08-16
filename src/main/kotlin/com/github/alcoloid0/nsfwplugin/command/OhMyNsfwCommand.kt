@@ -30,6 +30,7 @@ import com.github.alcoloid0.nsfwplugin.image.provider.impl.Rule34ImageProvider
 import com.github.alcoloid0.nsfwplugin.settings.Settings
 import com.github.alcoloid0.nsfwplugin.util.HttpHelper
 import com.github.alcoloid0.nsfwplugin.util.extensions.sendSettingsMessage
+import com.github.alcoloid0.nsfwplugin.util.extensions.splitToArray
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -58,7 +59,7 @@ class OhMyNsfwCommand {
     @Subcommand("rule34")
     @CommandPermission("ohmynsfw.use.rule34")
     fun onRule34(player: Player, @Optional tags: String = "") {
-        request(player, Rule34ImageProvider()) { it.random(*tags.split(" ").toTypedArray()) }
+        request(player, Rule34ImageProvider()) { it.random(*tags.splitToArray(" ")) }
     }
 
     @Subcommand("reddit")
@@ -70,7 +71,7 @@ class OhMyNsfwCommand {
     @Subcommand("gelbooru")
     @CommandPermission("ohmynsfw.use.gelbooru")
     fun onGelbooru(player: Player, @Optional tags: String = "") {
-        request(player, GelbooruImageProvider()) { it.random(*tags.split(" ").toTypedArray()) }
+        request(player, GelbooruImageProvider()) { it.random(*tags.splitToArray(" ")) }
     }
 
     @Subcommand("reload")
