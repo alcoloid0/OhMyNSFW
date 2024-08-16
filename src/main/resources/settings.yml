@@ -3,11 +3,14 @@
 message-prefix: '<#cb00f5>[OH MY NSFW] '
 
 map-item-settings:
-  name: '<#cb00f5>NSFW'
+  name: '<#cb00f5>Picture <white>(<yellow><rating></yellow>)'
   lore:
     - ''
-    - '<rainbow>Just a heads up, don''t show this to mom'
+    - '<white>Provider: <red><provider>'
+    - '<white>Direct URL: <red><direct-url>'
+    - '<white>Extra Info: <red><extra-info>'
     - ''
+    - '<rainbow>Just a heads up, don''t show this to mom'
   glow-effect: true
 
 proxy-settings:
@@ -15,8 +18,8 @@ proxy-settings:
   address: '127.0.0.1:8080'
 
 message: # https://docs.advntr.dev/minimessage/format.html
-  settings-reloaded: '<yellow>Plugin settings reloaded. (<ms>ms)'
-  request-prepare: '<white>Hold on! We''re loading the NSFW content up on the server right now. (<name>)'
+  settings-reloaded: '<white>Plugin settings reloaded <yellow>(<millis>ms)</yellow>.'
+  request-prepare: '<white>Hold on! We''re loading the NSFW content up on the server right now.'
   request-error-occurred: '<red>Oh no! There were some technical issues while loading NSFW content.'
   request-complete: '<white>You''ve been given a map <u>with a bit of adult content...</u> Yummy!'
   must-be-player: '<red>You must be a player to use this command!'
