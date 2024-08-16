@@ -100,8 +100,8 @@ class OhMyNsfwCommand {
             val metadataImage = lazyMetadataImage(imageProvider)
 
             val metadataResolver = TagResolver.builder().resolver(providerPlaceholder)
-                .resolver(Placeholder.unparsed("directUrl", metadataImage.directUrl.toString()))
-                .resolver(Placeholder.unparsed("extraInfo", metadataImage.extraInfo ?: ""))
+                .resolver(Placeholder.unparsed("direct-url", metadataImage.directUrl.toString()))
+                .resolver(Placeholder.unparsed("extra-info", metadataImage.extraInfo ?: ""))
                 .resolver(Placeholder.unparsed("rating", if (metadataImage.isNsfw) "NSFW" else "SFW"))
                 .build()
 
